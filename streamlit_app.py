@@ -40,57 +40,90 @@ st.set_page_config(
 # Styling
 # -----------------------------------------------------------------------------
 def render_html(markup: str, **_ignored_kwargs) -> None:
-    """Render HTML/CSS with the safest Streamlit API available.
-
-    The extra kwargs are intentionally accepted so old calls like
-    render_html(..., unsafe_allow_html=True) do not crash.
-    """
-    try:
-        st.html(markup)
-    except Exception:
-        st.markdown(markup, unsafe_allow_html=True)
+    """Render custom HTML/CSS and accept ignored kwargs for older call sites."""
+    st.markdown(markup, unsafe_allow_html=True)
 
 
 def inject_css() -> None:
     render_html(
         """
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
         :root {
-            --bg-0: #05070d;
-            --bg-1: #08111f;
-            --bg-2: #0f172a;
-            --panel: rgba(15, 23, 42, 0.88);
-            --panel-2: rgba(17, 31, 54, 0.94);
-            --panel-3: rgba(30, 41, 59, 0.88);
-            --line: rgba(148, 163, 184, 0.20);
-            --line-2: rgba(56, 189, 248, 0.38);
-            --text: #edf5ff;
-            --text-2: #dbeafe;
-            --muted: #9fb0c8;
-            --soft: #cbd5e1;
-            --blue: #38bdf8;
-            --cyan: #22d3ee;
-            --green: #34d399;
-            --amber: #fbbf24;
-            --red: #fb7185;
-            --purple: #a78bfa;
+            --mist: #A5C5CC;
+            --ink: #021334;
+            --deep: #012A61;
+            --mid: #275A91;
+            --rose: #977086;
+            --gold: #FDC787;
+            --bg-0: #020817;
+            --bg-1: #021334;
+            --panel: rgba(1, 42, 97, 0.36);
+            --panel-strong: rgba(2, 19, 52, 0.86);
+            --panel-soft: rgba(39, 90, 145, 0.16);
+            --line: rgba(165, 197, 204, 0.18);
+            --line-strong: rgba(253, 199, 135, 0.36);
+            --text: #EEF8FA;
+            --text-soft: #C7DCE2;
+            --muted: rgba(165, 197, 204, 0.72);
+            --shadow: rgba(0, 0, 0, 0.46);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         html, body, .stApp {
-            background: #05070d !important;
+            min-height: 100%;
+            background: var(--bg-0) !important;
             color: var(--text) !important;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
         }
+
         .stApp {
             background:
-                radial-gradient(circle at 10% -5%, rgba(56, 189, 248, 0.18), transparent 34rem),
-                radial-gradient(circle at 90% 0%, rgba(167, 139, 250, 0.16), transparent 32rem),
-                radial-gradient(circle at 50% 105%, rgba(52, 211, 153, 0.08), transparent 42rem),
-                linear-gradient(135deg, var(--bg-0), var(--bg-1) 52%, #050816) !important;
+                radial-gradient(circle at 12% -8%, rgba(253, 199, 135, 0.16), transparent 22rem),
+                radial-gradient(circle at 86% 3%, rgba(39, 90, 145, 0.36), transparent 33rem),
+                radial-gradient(circle at 50% 105%, rgba(151, 112, 134, 0.20), transparent 36rem),
+                linear-gradient(135deg, #020817 0%, #021334 45%, #010714 100%) !important;
         }
-        .block-container {
-            padding-top: 1.25rem;
-            padding-bottom: 3rem;
-            max-width: 1500px;
+
+        .stApp::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(165, 197, 204, 0.030) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(165, 197, 204, 0.026) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.30));
+        }
+
+        .stApp::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(circle at 50% 0%, transparent 0, rgba(2, 19, 52, 0.25) 42%, rgba(2, 8, 23, 0.72) 100%),
+                linear-gradient(to bottom, rgba(2, 19, 52, 0.05), rgba(0,0,0,0.28));
+        }
+
+        .main .block-container, .block-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1540px;
+            padding-top: 1rem;
+            padding-bottom: 4rem;
+        }
+
+        #MainMenu, footer, header, [data-testid="stToolbar"], [data-testid="stDecoration"] {
+            visibility: hidden !important;
+            height: 0 !important;
         }
 
         .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
@@ -98,21 +131,32 @@ def inject_css() -> None:
         .stApp [data-testid="stMarkdownContainer"] {
             color: var(--text) !important;
         }
-        .stApp a { color: #7dd3fc !important; }
-        .stApp small, .stApp .muted, .stApp [data-testid="stCaptionContainer"] p {
+
+        .stApp a {
+            color: var(--mist) !important;
+        }
+
+        h1, h2, h3 {
+            letter-spacing: -0.055em;
+        }
+
+        .muted, .stApp small, [data-testid="stCaptionContainer"] p {
             color: var(--muted) !important;
         }
-        h1, h2, h3 { letter-spacing: -0.035em; }
 
         section[data-testid="stSidebar"] {
             background:
-                linear-gradient(180deg, rgba(5, 7, 13, 0.97), rgba(8, 17, 31, 0.95)),
-                radial-gradient(circle at top left, rgba(56,189,248,0.11), transparent 18rem) !important;
-            border-right: 1px solid rgba(148, 163, 184, 0.17);
+                radial-gradient(circle at 20% 0%, rgba(253, 199, 135, 0.10), transparent 16rem),
+                linear-gradient(180deg, rgba(1, 10, 28, 0.98), rgba(2, 19, 52, 0.96)) !important;
+            border-right: 1px solid rgba(165, 197, 204, 0.16);
+            box-shadow: 22px 0 60px rgba(0,0,0,.32);
         }
+
         section[data-testid="stSidebar"] > div {
             background: transparent !important;
+            padding-top: 1.2rem;
         }
+
         section[data-testid="stSidebar"] h1,
         section[data-testid="stSidebar"] h2,
         section[data-testid="stSidebar"] h3,
@@ -120,324 +164,770 @@ def inject_css() -> None:
         section[data-testid="stSidebar"] label,
         section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
         section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
-            color: var(--text-2) !important;
-        }
-        section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {
-            color: var(--muted) !important;
+            color: var(--text-soft) !important;
         }
 
-        /* Force widgets to stay readable in Streamlit light/dark/system themes. */
+        .brand-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(253, 199, 135, 0.22);
+            border-radius: 24px;
+            padding: 18px 16px;
+            margin: 0 0 18px;
+            background:
+                radial-gradient(circle at top right, rgba(253,199,135,.16), transparent 9rem),
+                linear-gradient(145deg, rgba(1,42,97,.42), rgba(2,19,52,.84));
+            box-shadow: 0 22px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .brand-mark {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            color: #021334 !important;
+            font-weight: 950;
+            letter-spacing: -0.08em;
+            background: linear-gradient(135deg, var(--gold), var(--mist));
+            box-shadow: 0 0 35px rgba(253,199,135,.28);
+        }
+        .brand-card h2 {
+            margin: 0;
+            font-size: 1.26rem;
+            line-height: 1.05;
+        }
+        .brand-card p {
+            margin: 7px 0 0;
+            color: var(--muted) !important;
+            font-size: .82rem;
+            line-height: 1.5;
+        }
+
+        .sidebar-note {
+            margin: 10px 0 18px;
+            padding: 11px 13px;
+            border-radius: 16px;
+            background: rgba(165,197,204,.06);
+            border: 1px solid rgba(165,197,204,.12);
+            color: var(--muted) !important;
+            font-size: .80rem;
+            line-height: 1.45;
+        }
+
         .stTextInput input,
         .stNumberInput input,
         .stTextArea textarea,
         div[data-baseweb="select"] > div,
         div[data-baseweb="input"] > div,
         div[data-baseweb="textarea"] > div {
-            background: rgba(15, 23, 42, 0.96) !important;
-            border: 1px solid rgba(148, 163, 184, 0.24) !important;
-            border-radius: 14px !important;
+            background: rgba(2, 19, 52, 0.92) !important;
+            border: 1px solid rgba(165, 197, 204, 0.18) !important;
+            border-radius: 15px !important;
             color: var(--text) !important;
-            box-shadow: none !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.05) !important;
         }
+
         .stTextInput input,
         .stNumberInput input,
         .stTextArea textarea,
         div[data-baseweb="select"] input {
             color: var(--text) !important;
             -webkit-text-fill-color: var(--text) !important;
-            caret-color: var(--blue) !important;
+            caret-color: var(--gold) !important;
         }
+
         div[data-baseweb="select"] span,
         div[data-baseweb="select"] svg,
         div[data-baseweb="select"] div {
             color: var(--text) !important;
             fill: var(--text) !important;
         }
-        div[data-baseweb="popover"],
-        div[data-baseweb="popover"] > div,
-        div[role="listbox"],
-        ul[role="listbox"] {
-            background: #0b1120 !important;
-            border: 1px solid rgba(148, 163, 184, 0.24) !important;
-            border-radius: 14px !important;
+
+        div[data-baseweb="popover"], div[data-baseweb="popover"] > div,
+        div[role="listbox"], ul[role="listbox"] {
+            background: #03112d !important;
+            border: 1px solid rgba(253,199,135,.22) !important;
+            border-radius: 16px !important;
             color: var(--text) !important;
+            box-shadow: 0 28px 70px rgba(0,0,0,.55) !important;
         }
+
         div[role="option"], li[role="option"] {
-            background: #0b1120 !important;
+            background: #03112d !important;
             color: var(--text) !important;
         }
         div[role="option"]:hover, li[role="option"]:hover {
-            background: rgba(56, 189, 248, 0.16) !important;
+            background: rgba(39,90,145,.35) !important;
         }
         div[data-baseweb="tag"] {
-            background: rgba(56, 189, 248, 0.18) !important;
-            border: 1px solid rgba(56, 189, 248, 0.30) !important;
-            color: #dff6ff !important;
+            background: rgba(39,90,145,.36) !important;
+            border: 1px solid rgba(165,197,204,.26) !important;
+            color: var(--text) !important;
+            border-radius: 999px !important;
         }
 
         [data-testid="stFileUploaderDropzone"] {
-            background: rgba(15, 23, 42, 0.86) !important;
-            border: 1px dashed rgba(56, 189, 248, 0.38) !important;
-            border-radius: 18px !important;
+            background: rgba(2, 19, 52, 0.74) !important;
+            border: 1px dashed rgba(253, 199, 135, 0.34) !important;
+            border-radius: 20px !important;
             color: var(--text) !important;
+            box-shadow: inset 0 0 40px rgba(39,90,145,.10);
         }
         [data-testid="stFileUploaderDropzone"] * {
             color: var(--text) !important;
         }
+
         [data-testid="stFileUploaderDropzone"] button,
         .stButton button,
         .stDownloadButton button {
-            background: linear-gradient(135deg, rgba(56,189,248,0.20), rgba(167,139,250,0.18)) !important;
-            border: 1px solid rgba(125, 211, 252, 0.36) !important;
-            border-radius: 14px !important;
-            color: var(--text) !important;
-            font-weight: 800 !important;
-        }
-        [data-testid="stFileUploaderDropzone"] small {
-            color: var(--muted) !important;
-        }
-        [data-testid="stSlider"] [data-testid="stThumbValue"] {
-            color: #ffd1dc !important;
+            background: linear-gradient(135deg, rgba(253,199,135,.92), rgba(165,197,204,.74)) !important;
+            border: 1px solid rgba(253,199,135,.55) !important;
+            border-radius: 15px !important;
+            color: #021334 !important;
             font-weight: 900 !important;
+            box-shadow: 0 14px 34px rgba(253,199,135,.18) !important;
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
         }
-        [data-testid="stSlider"] p {
-            color: var(--text-2) !important;
-            font-weight: 700 !important;
+        [data-testid="stFileUploaderDropzone"] button:hover,
+        .stButton button:hover,
+        .stDownloadButton button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 18px 48px rgba(253,199,135,.26) !important;
         }
 
-        div[data-testid="stMetric"] {
-            background: linear-gradient(180deg, rgba(17, 31, 54, 0.92), rgba(8, 17, 31, 0.94));
-            border: 1px solid rgba(148,163,184,0.18);
-            border-radius: 1.25rem;
-            padding: 1rem 1rem;
-            box-shadow: 0 18px 54px rgba(0,0,0,0.28);
+        [data-testid="stSlider"] [data-testid="stThumbValue"] {
+            color: var(--gold) !important;
+            font-weight: 950 !important;
+            text-shadow: 0 0 20px rgba(253,199,135,.22);
         }
-        div[data-testid="stMetric"] label { color: var(--muted) !important; }
-        div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: var(--text) !important; }
+        [data-testid="stSlider"] p {
+            color: var(--text-soft) !important;
+            font-weight: 800 !important;
+        }
 
         .hero {
             position: relative;
             overflow: hidden;
-            border: 1px solid var(--line-2);
-            border-radius: 30px;
-            padding: 34px;
-            margin: 0 0 18px 0;
+            min-height: 430px;
+            border-radius: 34px;
+            padding: clamp(26px, 4vw, 54px);
+            margin: 0 0 24px 0;
+            border: 1px solid rgba(253,199,135,.30);
             background:
-                linear-gradient(135deg, rgba(56,189,248,0.17), rgba(167,139,250,0.12)),
-                linear-gradient(180deg, rgba(17,31,54,0.88), rgba(8,17,31,0.94));
-            box-shadow: 0 30px 95px rgba(0, 0, 0, 0.35);
+                radial-gradient(circle at 78% 16%, rgba(253,199,135,.24), transparent 13rem),
+                radial-gradient(circle at 18% 10%, rgba(39,90,145,.50), transparent 25rem),
+                linear-gradient(115deg, rgba(2,19,52,.98) 0%, rgba(1,42,97,.78) 52%, rgba(2,19,52,.96) 100%);
+            box-shadow: 0 38px 110px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+            isolation: isolate;
         }
-        .hero:after {
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            z-index: -1;
+            background:
+                linear-gradient(90deg, rgba(253,199,135,.14), transparent 34%),
+                repeating-linear-gradient(115deg, rgba(165,197,204,.055) 0 1px, transparent 1px 22px);
+            opacity: .72;
+        }
+        .hero::after {
             content: "";
             position: absolute;
             right: -120px;
-            top: -120px;
-            width: 315px;
-            height: 315px;
+            top: -90px;
+            width: 420px;
+            height: 420px;
             border-radius: 50%;
-            background: rgba(56,189,248,0.13);
+            background: radial-gradient(circle, rgba(253,199,135,.20), rgba(151,112,134,.10) 45%, transparent 68%);
             filter: blur(1px);
+            animation: floatAura 9s ease-in-out infinite alternate;
+        }
+        @keyframes floatAura {
+            from { transform: translate3d(0,0,0) scale(1); opacity: .78; }
+            to { transform: translate3d(-24px, 26px, 0) scale(1.06); opacity: 1; }
+        }
+        @keyframes shimmer {
+            from { transform: translateX(-140%); }
+            to { transform: translateX(140%); }
+        }
+        @keyframes drift {
+            from { transform: translateY(0); opacity: .28; }
+            50% { opacity: .90; }
+            to { transform: translateY(-18px); opacity: .36; }
+        }
+        .hero-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(300px, .72fr);
+            gap: clamp(22px, 4vw, 48px);
+            align-items: center;
         }
         .hero-kicker {
             display: inline-flex;
-            gap: 8px;
             align-items: center;
-            padding: 7px 12px;
+            gap: 9px;
+            padding: 8px 13px;
+            margin-bottom: 16px;
             border-radius: 999px;
-            background: rgba(56,189,248,0.14);
-            border: 1px solid rgba(56,189,248,0.28);
-            color: #bae6fd !important;
-            font-size: 0.82rem;
-            font-weight: 900;
-            margin-bottom: 12px;
+            color: var(--gold) !important;
+            font-size: .78rem;
+            font-weight: 950;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            background: rgba(253,199,135,.10);
+            border: 1px solid rgba(253,199,135,.25);
+            box-shadow: 0 0 34px rgba(253,199,135,.12);
+        }
+        .hero-kicker::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--gold);
+            box-shadow: 0 0 16px var(--gold);
         }
         .hero h1 {
+            max-width: 920px;
             margin: 0;
-            font-size: clamp(2.3rem, 5vw, 4.7rem);
-            line-height: 0.94;
             color: #ffffff !important;
-            text-shadow: 0 18px 50px rgba(0,0,0,0.34);
+            font-size: clamp(2.9rem, 6.4vw, 6.8rem);
+            line-height: .86;
+            letter-spacing: -0.075em;
+            text-shadow: 0 18px 58px rgba(0,0,0,.46);
         }
-        .hero p {
-            max-width: 880px;
-            color: var(--soft) !important;
-            font-size: 1.06rem;
-            margin-top: 16px;
-            margin-bottom: 0;
+        .hero h1 .accent {
+            color: var(--gold) !important;
+            text-shadow: 0 0 36px rgba(253,199,135,.26);
         }
-        .glass-panel {
-            background: linear-gradient(180deg, rgba(17,31,54,0.93), rgba(15,23,42,0.90));
-            border: 1px solid rgba(148,163,184,0.18);
-            border-radius: 22px;
+        .hero-subtitle {
+            max-width: 860px;
+            color: var(--text-soft) !important;
+            font-size: clamp(1.02rem, 1.25vw, 1.20rem);
+            line-height: 1.72;
+            margin: 20px 0 0;
+        }
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 28px;
+        }
+        .cta {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 0 20px;
+            border-radius: 999px;
+            font-weight: 950;
+            text-decoration: none !important;
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .cta-primary {
+            color: #021334 !important;
+            background: linear-gradient(135deg, var(--gold), #ffe2ad 45%, var(--mist));
+            border: 1px solid rgba(253,199,135,.55);
+            box-shadow: 0 18px 48px rgba(253,199,135,.25);
+        }
+        .cta-primary::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+            animation: shimmer 3.8s infinite;
+        }
+        .cta-secondary {
+            color: var(--text) !important;
+            background: rgba(165,197,204,.08);
+            border: 1px solid rgba(165,197,204,.26);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 26px 70px rgba(253,199,135,.22);
+        }
+        .hero-panel {
+            position: relative;
+            z-index: 2;
+            border-radius: 28px;
             padding: 18px;
-            box-shadow: 0 18px 54px rgba(0,0,0,0.25);
+            background: rgba(2,19,52,.62);
+            border: 1px solid rgba(165,197,204,.20);
+            box-shadow: 0 30px 82px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+            backdrop-filter: blur(18px);
+        }
+        .launcher-screen {
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at 72% 25%, rgba(253,199,135,.24), transparent 8rem),
+                linear-gradient(145deg, rgba(39,90,145,.34), rgba(1,42,97,.30));
+            border: 1px solid rgba(165,197,204,.16);
+        }
+        .launcher-screen::before,
+        .launcher-screen::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(253,199,135,.78);
+            box-shadow: 0 0 24px rgba(253,199,135,.40);
+            animation: drift 4.8s ease-in-out infinite alternate;
+        }
+        .launcher-screen::before { width: 7px; height: 7px; left: 18%; top: 22%; }
+        .launcher-screen::after { width: 5px; height: 5px; right: 18%; bottom: 26%; animation-delay: 1.3s; }
+        .mock-row {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            border-radius: 18px;
+            background: rgba(2,19,52,.58);
+            border: 1px solid rgba(165,197,204,.12);
+        }
+        .mock-row.one { top: 22px; }
+        .mock-row.two { top: 112px; transform: translateX(18px); opacity: .92; }
+        .mock-row.three { top: 202px; transform: translateX(-8px); opacity: .82; }
+        .mock-img {
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--gold), var(--mid));
+            box-shadow: 0 12px 24px rgba(0,0,0,.22);
+        }
+        .mock-line b, .mock-line span { display: block; }
+        .mock-line b { color: #fff !important; font-size: .88rem; margin-bottom: 5px; }
+        .mock-line span { color: var(--muted) !important; font-size: .74rem; }
+        .mock-score {
+            display: grid;
+            place-items: center;
+            width: 50px;
+            height: 34px;
+            border-radius: 999px;
+            color: var(--gold) !important;
+            font-weight: 950;
+            background: rgba(253,199,135,.10);
+            border: 1px solid rgba(253,199,135,.25);
+        }
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .hero-stat {
+            border-radius: 18px;
+            padding: 13px;
+            background: rgba(165,197,204,.06);
+            border: 1px solid rgba(165,197,204,.13);
+        }
+        .hero-stat strong {
+            display: block;
+            color: #fff !important;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .hero-stat span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted) !important;
+            font-size: .73rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin: 0 0 24px;
+        }
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 118px;
+            border-radius: 24px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(1,42,97,.42), rgba(2,19,52,.72));
+            border: 1px solid rgba(165,197,204,.16);
+            box-shadow: 0 18px 60px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.06);
+        }
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            right: -35px;
+            bottom: -35px;
+            border-radius: 999px;
+            background: rgba(253,199,135,.10);
+            filter: blur(1px);
+        }
+        .feature-card b {
+            display: block;
+            color: #fff !important;
+            font-size: .96rem;
+            margin-bottom: 8px;
+        }
+        .feature-card span {
+            color: var(--muted) !important;
+            font-size: .82rem;
+            line-height: 1.45;
+        }
+
+        div[data-testid="stMetric"] {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(1,42,97,.44), rgba(2,19,52,.72));
+            border: 1px solid rgba(165,197,204,.16);
+            border-radius: 22px;
+            padding: 1rem 1rem;
+            box-shadow: 0 22px 64px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06);
+        }
+        div[data-testid="stMetric"]::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(253,199,135,.10), transparent 45%);
+            opacity: .74;
+        }
+        div[data-testid="stMetric"] label { color: var(--muted) !important; font-weight: 800 !important; }
+        div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: #ffffff !important; font-weight: 950 !important; }
+
+        .glass-panel {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(1,42,97,.42), rgba(2,19,52,.76));
+            border: 1px solid rgba(165,197,204,.16);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06);
             margin-bottom: 16px;
             color: var(--text) !important;
         }
+        .glass-panel b { color: #fff !important; }
+
         .section-title {
             display: flex;
             align-items: end;
             justify-content: space-between;
-            gap: 12px;
-            margin: 14px 0 12px 0;
+            gap: 14px;
+            margin: 18px 0 14px 0;
+            padding-top: 4px;
         }
-        .section-title h3 { margin: 0; color: #f8fbff !important; }
-        .muted { color: var(--muted) !important; }
+        .section-title h3 {
+            margin: 0;
+            color: #ffffff !important;
+            font-size: clamp(1.35rem, 2vw, 2.05rem);
+            letter-spacing: -0.05em;
+        }
+        .section-title span {
+            color: var(--muted) !important;
+            font-size: .84rem;
+        }
 
         .game-card {
+            position: relative;
             height: 100%;
             min-height: 100%;
-            background: linear-gradient(180deg, rgba(17,31,54,0.98), rgba(10,18,32,0.98));
-            border: 1px solid rgba(148,163,184,0.19);
-            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.28);
-            transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
-            margin-bottom: 18px;
+            border-radius: 28px;
+            background:
+                linear-gradient(180deg, rgba(1,42,97,.54), rgba(2,19,52,.88));
+            border: 1px solid rgba(165,197,204,.17);
+            box-shadow: 0 24px 72px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.06);
+            transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+            margin-bottom: 20px;
+            isolation: isolate;
+        }
+        .game-card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(253,199,135,.23), transparent 28%, rgba(39,90,145,.30));
+            opacity: 0;
+            transition: opacity .22s ease;
         }
         .game-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(56,189,248,0.55);
-            box-shadow: 0 26px 82px rgba(0,0,0,0.39);
+            transform: translateY(-7px);
+            border-color: rgba(253,199,135,.38);
+            box-shadow: 0 34px 100px rgba(0,0,0,.46), 0 0 48px rgba(39,90,145,.18);
         }
+        .game-card:hover::before { opacity: 1; }
         .game-img-wrap {
+            position: relative;
             width: 100%;
             aspect-ratio: 2.16 / 1;
-            background: linear-gradient(135deg, rgba(56,189,248,0.16), rgba(167,139,250,0.11));
+            background:
+                radial-gradient(circle at 72% 18%, rgba(253,199,135,.18), transparent 8rem),
+                linear-gradient(135deg, rgba(39,90,145,.44), rgba(2,19,52,.84));
             overflow: hidden;
-            border-bottom: 1px solid rgba(148,163,184,0.16);
+            border-bottom: 1px solid rgba(165,197,204,.13);
+        }
+        .game-img-wrap::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(2,19,52,.74), transparent 62%);
+            pointer-events: none;
         }
         .game-img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            transform: scale(1.01);
+            transition: transform .34s ease, filter .34s ease;
         }
-        .game-body { padding: 15px 16px 17px 16px; }
+        .game-card:hover .game-img-wrap img {
+            transform: scale(1.065);
+            filter: saturate(1.08) contrast(1.05);
+        }
+        .game-img-fallback {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 18px;
+        }
+        .game-img-fallback span {
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            margin-bottom: 8px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, var(--gold), var(--mid));
+            color: var(--ink) !important;
+            font-weight: 950;
+        }
+        .game-img-fallback b { color: #fff !important; }
+        .game-topline {
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            top: 14px;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .rank-badge, .score-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            font-weight: 950;
+            font-size: .70rem;
+            border: 1px solid rgba(253,199,135,.32);
+            background: rgba(2,19,52,.58);
+            color: var(--gold) !important;
+            backdrop-filter: blur(12px);
+        }
+        .score-badge { color: var(--mist) !important; border-color: rgba(165,197,204,.30); }
+        .game-body { padding: 17px 17px 18px; }
         .game-title {
-            font-size: 1.05rem;
-            font-weight: 900;
-            color: #f8fbff !important;
-            line-height: 1.25;
+            font-size: 1.13rem;
+            font-weight: 950;
+            color: #ffffff !important;
+            line-height: 1.20;
             margin-bottom: 7px;
+            letter-spacing: -0.03em;
         }
-        .game-title a { color: #f8fbff !important; text-decoration: none; }
-        .game-title a:hover { color: #7dd3fc !important; }
+        .game-title a { color: #ffffff !important; text-decoration: none; }
+        .game-title a:hover { color: var(--gold) !important; }
         .meta-line {
             color: var(--muted) !important;
-            font-size: 0.83rem;
+            font-size: .82rem;
             margin-bottom: 10px;
         }
-        .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 9px 0; }
+        .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
         .pill {
             display: inline-flex;
             align-items: center;
             gap: 5px;
             border-radius: 999px;
             padding: 6px 10px;
-            font-size: 0.72rem;
-            font-weight: 900;
-            letter-spacing: 0.01em;
-            border: 1px solid rgba(148,163,184,0.18);
-            color: #eaf2ff !important;
-            background: rgba(148,163,184,0.12);
+            font-size: .70rem;
+            font-weight: 950;
+            letter-spacing: .01em;
+            border: 1px solid rgba(165,197,204,.16);
+            color: var(--text-soft) !important;
+            background: rgba(165,197,204,.08);
             white-space: nowrap;
         }
-        .pill-blue { background: rgba(56,189,248,0.16); color: #bae6fd !important; border-color: rgba(56,189,248,0.34); }
-        .pill-green { background: rgba(52,211,153,0.16); color: #bbf7d0 !important; border-color: rgba(52,211,153,0.34); }
-        .pill-amber { background: rgba(251,191,36,0.16); color: #fde68a !important; border-color: rgba(251,191,36,0.34); }
-        .pill-red { background: rgba(251,113,133,0.18); color: #fecdd3 !important; border-color: rgba(251,113,133,0.36); }
+        .pill-blue { background: rgba(39,90,145,.22); color: #D8F1F6 !important; border-color: rgba(165,197,204,.22); }
+        .pill-green { background: rgba(165,197,204,.14); color: #EAF7F9 !important; border-color: rgba(165,197,204,.25); }
+        .pill-amber { background: rgba(253,199,135,.14); color: var(--gold) !important; border-color: rgba(253,199,135,.30); }
+        .pill-red { background: rgba(151,112,134,.22); color: #FFDCE9 !important; border-color: rgba(151,112,134,.36); }
         .tag {
             display: inline-flex;
             padding: 5px 9px;
             border-radius: 999px;
-            background: rgba(148,163,184,0.11);
-            border: 1px solid rgba(148,163,184,0.20);
-            color: #dbeafe !important;
-            font-size: 0.72rem;
+            background: rgba(165,197,204,.075);
+            border: 1px solid rgba(165,197,204,.15);
+            color: var(--text-soft) !important;
+            font-size: .70rem;
             margin: 0 5px 6px 0;
         }
         .why {
-            border: 1px solid rgba(56,189,248,0.18);
-            background: linear-gradient(180deg, rgba(56,189,248,0.09), rgba(15,23,42,0.24));
+            position: relative;
+            border: 1px solid rgba(253,199,135,.16);
+            background: linear-gradient(180deg, rgba(253,199,135,.08), rgba(39,90,145,.10));
             margin-top: 12px;
-            padding: 11px 12px;
-            border-radius: 15px;
-            color: var(--soft) !important;
-            font-size: 0.82rem;
-            line-height: 1.45;
+            padding: 12px 13px;
+            border-radius: 18px;
+            color: var(--text-soft) !important;
+            font-size: .81rem;
+            line-height: 1.5;
         }
         .why b, .why-label {
-            color: #bae6fd !important;
-            font-weight: 900;
+            color: var(--gold) !important;
+            font-weight: 950;
         }
-        .bar-row { margin: 8px 0; }
+        .card-actions {
+            display: flex;
+            gap: 9px;
+            margin-top: 13px;
+        }
+        .card-action {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            border-radius: 999px;
+            text-decoration: none !important;
+            color: var(--ink) !important;
+            font-weight: 950;
+            font-size: .78rem;
+            background: linear-gradient(135deg, var(--gold), var(--mist));
+            border: 1px solid rgba(253,199,135,.38);
+            transition: transform .16s ease, filter .16s ease;
+        }
+        .card-action.secondary {
+            color: var(--text) !important;
+            background: rgba(165,197,204,.08);
+            border-color: rgba(165,197,204,.16);
+        }
+        .card-action:hover { transform: translateY(-2px); filter: brightness(1.06); }
+        .bar-row { margin: 9px 0; }
         .bar-label {
             display: flex;
             justify-content: space-between;
             color: var(--muted) !important;
-            font-size: 0.72rem;
-            margin-bottom: 4px;
+            font-size: .72rem;
+            margin-bottom: 5px;
         }
         .bar-label span { color: var(--muted) !important; }
         .bar-track {
-            height: 7px;
+            height: 8px;
             border-radius: 999px;
-            background: rgba(148,163,184,0.14);
+            background: rgba(165,197,204,.12);
             overflow: hidden;
+            box-shadow: inset 0 1px 5px rgba(0,0,0,.30);
         }
         .bar-fill {
             height: 100%;
             border-radius: 999px;
-            background: linear-gradient(90deg, var(--blue), var(--purple));
+            background: linear-gradient(90deg, var(--mid), var(--mist), var(--gold));
+            box-shadow: 0 0 16px rgba(253,199,135,.22);
         }
         .mini-note {
-            border-left: 3px solid var(--blue);
-            background: rgba(56,189,248,0.09);
-            border-radius: 15px;
-            padding: 12px 14px;
-            color: var(--soft) !important;
+            border-left: 3px solid var(--gold);
+            background: rgba(253,199,135,.075);
+            border-radius: 16px;
+            padding: 13px 15px;
+            color: var(--text-soft) !important;
             margin: 8px 0 16px 0;
+            border-top: 1px solid rgba(253,199,135,.10);
+            border-right: 1px solid rgba(253,199,135,.10);
+            border-bottom: 1px solid rgba(253,199,135,.10);
         }
         .method-card {
-            background: linear-gradient(180deg, rgba(17,31,54,0.93), rgba(15,23,42,0.91));
-            border: 1px solid rgba(148,163,184,0.18);
-            border-radius: 19px;
-            padding: 17px;
+            background: linear-gradient(180deg, rgba(1,42,97,.42), rgba(2,19,52,.72));
+            border: 1px solid rgba(165,197,204,.16);
+            border-radius: 22px;
+            padding: 18px;
             height: 100%;
-            box-shadow: 0 16px 44px rgba(0,0,0,0.24);
+            box-shadow: 0 18px 54px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
         }
-        .method-card h4 { margin-top: 0; color: #f8fbff !important; }
-        .method-card p { color: var(--soft) !important; }
+        .method-card h4 { margin-top: 0; color: #fff !important; }
+        .method-card p { color: var(--text-soft) !important; }
 
-        .stTabs [data-baseweb="tab-list"] { gap: 8px; }
-        .stTabs [data-baseweb="tab"] {
-            background: rgba(148,163,184,0.08);
-            border: 1px solid rgba(148,163,184,0.14);
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 8px;
+            padding: 8px;
             border-radius: 999px;
-            padding: 9px 15px;
-            color: var(--text-2) !important;
+            background: rgba(2,19,52,.42);
+            border: 1px solid rgba(165,197,204,.12);
         }
-        .stTabs [data-baseweb="tab"] p { color: var(--text-2) !important; }
+        .stTabs [data-baseweb="tab"] {
+            background: rgba(165,197,204,.055);
+            border: 1px solid rgba(165,197,204,.12);
+            border-radius: 999px;
+            padding: 10px 16px;
+            color: var(--text-soft) !important;
+        }
+        .stTabs [data-baseweb="tab"] p { color: var(--text-soft) !important; font-weight: 900 !important; }
         .stTabs [aria-selected="true"] {
-            background: rgba(56,189,248,0.16) !important;
-            border-color: rgba(56,189,248,0.38) !important;
+            background: linear-gradient(135deg, rgba(253,199,135,.18), rgba(39,90,145,.25)) !important;
+            border-color: rgba(253,199,135,.34) !important;
+            box-shadow: 0 0 28px rgba(253,199,135,.10);
         }
-        .stTabs [aria-selected="true"] p { color: #bae6fd !important; font-weight: 900 !important; }
+        .stTabs [aria-selected="true"] p { color: var(--gold) !important; }
 
         [data-testid="stExpander"] {
-            background: rgba(15,23,42,0.86) !important;
-            border: 1px solid rgba(148,163,184,0.18) !important;
-            border-radius: 18px !important;
+            background: rgba(2,19,52,.66) !important;
+            border: 1px solid rgba(165,197,204,.15) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 18px 50px rgba(0,0,0,.22);
         }
         .stAlert {
-            background: rgba(15,23,42,0.90) !important;
+            background: rgba(2,19,52,.88) !important;
             color: var(--text) !important;
+            border-radius: 18px !important;
+            border: 1px solid rgba(165,197,204,.16) !important;
+        }
+        [data-testid="stDataFrame"] {
+            border-radius: 20px !important;
+            overflow: hidden !important;
+            border: 1px solid rgba(165,197,204,.16) !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,.28);
+        }
+
+        @media (max-width: 1100px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .hero { min-height: auto; }
+        }
+        @media (max-width: 700px) {
+            .block-container { padding-left: .85rem !important; padding-right: .85rem !important; }
+            .hero { border-radius: 24px; padding: 24px 18px; }
+            .hero h1 { font-size: clamp(2.45rem, 16vw, 4rem); }
+            .hero-actions { flex-direction: column; }
+            .cta { width: 100%; }
+            .hero-stats { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .section-title { display: block; }
+            .stTabs [data-baseweb="tab-list"] { border-radius: 22px; flex-wrap: wrap; }
+            .game-card { border-radius: 22px; }
         }
         </style>
         """
     )
-
 
 # -----------------------------------------------------------------------------
 # Data utilities
@@ -1209,16 +1699,24 @@ def game_card_html(
     favorite_titles: Sequence[str] = (),
     preferred_tags: Sequence[str] = (),
     show_components: bool = False,
+    rank: int | None = None,
 ) -> str:
     title = esc(row.get("name", "Unknown Game"))
-    url = esc(steam_url(row))
+    url_raw = steam_url(row)
+    url = esc(url_raw)
     title_html = (
         f'<a href="{url}" target="_blank" rel="noopener noreferrer">{title}</a>'
         if url
         else title
     )
     img = esc(str(row.get("header_image", "")).strip())
-    img_html = f'<img src="{img}" alt="{title} cover" loading="lazy">' if img else ""
+    initials = "".join([part[:1] for part in re.findall(r"[A-Za-z0-9]+", title)[:2]]).upper() or "SV"
+    fallback = f'<div class="game-img-fallback"><div><span>{esc(initials)}</span><b>{title}</b></div></div>'
+    img_html = (
+        f'{fallback}<img src="{img}" alt="{title} cover" loading="lazy" onerror="this.remove();">'
+        if img
+        else fallback
+    )
     genre = esc(row.get("genre_primary", "Unknown"))
     year = fmt_int(row.get("year"))
     score = fmt_float(row.get("final_score_pct", row.get("display_score", 0)), 1)
@@ -1236,14 +1734,30 @@ def game_card_html(
             + component_bar("Rule fit", float(row.get("rule_component", 0)))
             + component_bar("Value", float(row.get("value_component", 0)))
         )
+    rank_label = f"#{rank:02d}" if rank is not None else "Featured"
+    action_primary = (
+        f'<a class="card-action" href="{url}" target="_blank" rel="noopener noreferrer">Open Steam</a>'
+        if url
+        else '<span class="card-action">Details</span>'
+    )
+    action_secondary = (
+        f'<a class="card-action secondary" href="{url}" target="_blank" rel="noopener noreferrer">Wishlist</a>'
+        if url
+        else '<span class="card-action secondary">Wishlist</span>'
+    )
     return f"""
     <article class="game-card">
-      <div class="game-img-wrap">{img_html}</div>
+      <div class="game-img-wrap">
+        {img_html}
+        <div class="game-topline">
+          <span class="rank-badge">{rank_label}</span>
+          <span class="score-badge">Score {score}</span>
+        </div>
+      </div>
       <div class="game-body">
         <div class="game-title">{title_html}</div>
         <div class="meta-line">{genre} | {year} | {price_badge(row)}</div>
         <div class="pill-row">
-          <span class="pill pill-blue">Score {score}</span>
           <span class="pill pill-green">Pos {pos}</span>
           <span class="pill">Reviews {recs}</span>
           <span class="pill">Playtime {play}</span>
@@ -1251,9 +1765,11 @@ def game_card_html(
         <div>{tag_html}</div>
         {comp_html}
         <div class="why"><span class="why-label">Why:</span> {why}</div>
+        <div class="card-actions">{action_primary}{action_secondary}</div>
       </div>
     </article>
     """
+
 
 def render_cards(
     rows: pd.DataFrame,
@@ -1269,7 +1785,7 @@ def render_cards(
     cards = st.columns(columns)
     for i, (_, row) in enumerate(rows.iterrows()):
         with cards[i % columns]:
-            render_html(game_card_html(row, games, favorite_titles, preferred_tags, show_components))
+            render_html(game_card_html(row, games, favorite_titles, preferred_tags, show_components, rank=i + 1))
 
 
 def apply_global_filters(
@@ -1308,8 +1824,8 @@ def clean_plotly(fig: go.Figure, height: int = 360) -> go.Figure:
     fig.update_layout(
         template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#dbeafe"),
+        plot_bgcolor="rgba(2,19,52,0.16)",
+        font=dict(color="#C7DCE2", family="Inter"),
         margin=dict(l=12, r=12, t=55, b=12),
         height=height,
     )
@@ -1338,13 +1854,89 @@ def top_unique_games(df: pd.DataFrame, sort_col: str, used_names: set[str], n: i
     return fresh
 
 
+
+
+def render_sidebar_brand() -> None:
+    render_html(
+        """
+        <div class="brand-card">
+            <div class="brand-mark">SV</div>
+            <h2>SteamVault Pro</h2>
+            <p>Premium discovery console untuk analisis, eksplorasi, dan rekomendasi game Steam.</p>
+        </div>
+        <div class="sidebar-note">
+            Atur library filter di sini. Gunakan tab Rekomendasi untuk mencari game berdasarkan preferensi, genre, tag, budget, dan sinyal crowd.
+        </div>
+        """
+    )
+
+
+def hero_section(total_games: int, filtered_games: int, data_source: str) -> str:
+    return f"""
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-kicker">Cinematic Steam discovery engine</div>
+          <h1>Find your next <span class="accent">legendary</span> game.</h1>
+          <p class="hero-subtitle">
+            SteamVault Pro menggabungkan visual discovery, scoring kualitas, crowd signal,
+            content similarity, dan hybrid recommendation agar user tidak cuma melihat daftar game,
+            tetapi paham alasan tiap game layak dimainkan.
+          </p>
+          <div class="hero-actions">
+            <a class="cta cta-primary" href="#recommender">Start recommendation</a>
+            <a class="cta cta-secondary" href="#explore">Explore library</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><strong>{total_games:,}</strong><span>Total games indexed</span></div>
+            <div class="hero-stat"><strong>{filtered_games:,}</strong><span>Visible after filter</span></div>
+            <div class="hero-stat"><strong>{esc(data_source)}</strong><span>Active dataset</span></div>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="launcher-screen">
+            <div class="mock-row one">
+              <div class="mock-img"></div>
+              <div class="mock-line"><b>Quality signal</b><span>Bayesian rating + popularity</span></div>
+              <div class="mock-score">92</div>
+            </div>
+            <div class="mock-row two">
+              <div class="mock-img"></div>
+              <div class="mock-line"><b>Content match</b><span>TF-IDF genre, tag, description</span></div>
+              <div class="mock-score">88</div>
+            </div>
+            <div class="mock-row three">
+              <div class="mock-img"></div>
+              <div class="mock-line"><b>Hybrid engine</b><span>Rule + value + novelty</span></div>
+              <div class="mock-score">95</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    """
+
+
+def feature_strip() -> str:
+    items = [
+        ("Discover", "Browse game cards with cinematic covers, badges, value signals, and Steam actions."),
+        ("Analyze", "Read market-level insight from genre, price, positivity, and quality distributions."),
+        ("Recommend", "Run smart hybrid recommendation using content, rule, crowd, value, and novelty weights."),
+        ("Explain", "Every recommendation includes a readable reason and component score breakdown."),
+    ]
+    cards = "".join(f'<div class="feature-card"><b>{esc(title)}</b><span>{esc(desc)}</span></div>' for title, desc in items)
+    return f'<div class="feature-grid">{cards}</div>'
+
+
+def section_header(title: str, subtitle: str = "") -> str:
+    return f'<div class="section-title"><h3>{esc(title)}</h3><span>{esc(subtitle)}</span></div>'
+
 # -----------------------------------------------------------------------------
 # Main app
 # -----------------------------------------------------------------------------
 inject_css()
 
-st.sidebar.markdown("## SteamVault Pro")
-st.sidebar.caption("Dashboard analisis dan sistem rekomendasi game Steam.")
+render_sidebar_brand()
 uploaded_games = st.sidebar.file_uploader("Upload CSV dataset game", type=["csv"], help="Opsional. Jika kosong, aplikasi membaca steam_top_games_2026.csv di folder yang sama.")
 uploaded_interactions = st.sidebar.file_uploader(
     "Opsional: upload interaksi user-item",
@@ -1397,36 +1989,25 @@ global_mode = st.sidebar.selectbox("Mode global", ["any", "singleplayer", "multi
 global_search = st.sidebar.text_input("Cari judul")
 filtered = apply_global_filters(games, year_range, global_price, global_min_pos, global_genres, global_tags, global_mode, global_search)
 
-render_html(
-    f"""
-    <div class='hero'>
-      <div class='hero-kicker'>Recommendation System Dashboard</div>
-      <h1>{APP_TITLE}</h1>
-      <p>
-        Dashboard ini menggabungkan eksplorasi data, content-based recommendation, rule-based filtering,
-        crowd/collaborative signal, dan weighted hybrid recommendation. Fokusnya bukan hanya menampilkan data,
-        tetapi juga menjelaskan kenapa sebuah game direkomendasikan.
-      </p>
-    </div>
-    """
-)
+render_html(hero_section(len(games), len(filtered), data_source))
+render_html(feature_strip())
 
 st.caption(f"Data source: {data_source} | Jumlah data: {len(games):,} game | Setelah filter: {len(filtered):,} game")
 
 kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
-kpi1.metric("Total games", f"{len(games):,}")
-kpi2.metric("Filtered", f"{len(filtered):,}")
-kpi3.metric("Free games", f"{int(filtered['is_free'].sum()):,}" if not filtered.empty else "0")
+kpi1.metric("Library size", f"{len(games):,}")
+kpi2.metric("Active results", f"{len(filtered):,}")
+kpi3.metric("Free titles", f"{int(filtered['is_free'].sum()):,}" if not filtered.empty else "0")
 kpi4.metric("Avg positivity", fmt_float(filtered["positivity"].mean() if not filtered.empty else np.nan, 1, "%"))
-kpi5.metric("Avg score", fmt_float((filtered["quality_score"].mean() * 100) if not filtered.empty else np.nan, 1))
+kpi5.metric("Quality index", fmt_float((filtered["quality_score"].mean() * 100) if not filtered.empty else np.nan, 1))
 
 
 tab_overview, tab_explore, tab_recommender, tab_evaluation, tab_method = st.tabs(
-    ["Ringkasan", "Eksplorasi", "Rekomendasi", "Evaluasi", "Metodologi"]
+    ["Overview", "Explore", "Recommend", "Evaluation", "Methodology"]
 )
 
 with tab_overview:
-    render_html("<div class='section-title'><h3>Insight utama</h3><span class='muted'>overview dataset</span></div>")
+    render_html(section_header("Library intelligence", "overview dataset"))
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
@@ -1463,7 +2044,7 @@ with tab_overview:
             )
             st.plotly_chart(clean_plotly(fig, height=340), width="stretch")
 
-        render_html("<div class='section-title'><h3>Top picks cepat</h3><span class='muted'>quality, value, dan popularity</span></div>")
+        render_html(section_header("Fast picks", "quality, value, and crowd favorites"))
         pick_cols = st.columns(3)
         used_quick_names: set[str] = set()
         quick_sets = [
@@ -1477,7 +2058,7 @@ with tab_overview:
                 render_cards(data, games, columns=1)
 
 with tab_explore:
-    render_html("<div class='section-title'><h3>Game explorer</h3><span class='muted'>browse dan shortlist kandidat</span></div>")
+    render_html('<span id="explore"></span>' + section_header("Game explorer", "browse and shortlist candidates"))
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
@@ -1519,7 +2100,7 @@ with tab_explore:
         )
 
 with tab_recommender:
-    render_html("<div class='section-title'><h3>Smart recommender</h3><span class='muted'>hybrid, explainable, configurable</span></div>")
+    render_html('<span id="recommender"></span>' + section_header("Smart recommender", "hybrid, explainable, configurable"))
     st.markdown(
         "<div class='mini-note'>Tips: pilih 1-5 game favorit atau beberapa tag/genre. Jika tidak ada input favorit, sistem otomatis menjadi cold-start recommender berbasis rule, value, dan crowd signal.</div>",
         unsafe_allow_html=True,
@@ -1627,7 +2208,7 @@ with tab_recommender:
         )
 
 with tab_evaluation:
-    render_html("<div class='section-title'><h3>Evaluasi rekomendasi</h3><span class='muted'>quality, diversity, coverage</span></div>")
+    render_html(section_header("Recommendation evaluation", "quality, diversity, coverage"))
     st.write("Tab ini mengevaluasi hasil rekomendasi terakhir dari konfigurasi pada tab Rekomendasi.")
     try:
         eval_recs = recs.copy()
@@ -1685,7 +2266,7 @@ with tab_evaluation:
         )
 
 with tab_method:
-    render_html("<div class='section-title'><h3>Metodologi sistem rekomendasi</h3><span class='muted'>siap dipakai untuk pembahasan dashboard</span></div>")
+    render_html(section_header("Recommendation methodology", "ready for dashboard explanation"))
     st.markdown(
         """
         Dashboard ini memakai empat pendekatan utama agar sesuai dengan topik recommendation system.
