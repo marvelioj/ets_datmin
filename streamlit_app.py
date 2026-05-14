@@ -1410,6 +1410,194 @@ def inject_css() -> None:
         @media (max-width: 1180px) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 760px) { .card-grid { grid-template-columns: 1fr; } }
 
+
+        /* Detail page + gameplay description patch */
+        .game-desc {
+            margin: 11px 0 0;
+            color: rgba(238,248,250,.78) !important;
+            font-size: .82rem;
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .detail-hero {
+            position: relative;
+            overflow: hidden;
+            margin: 2px 0 24px;
+            padding: clamp(20px, 3.2vw, 38px);
+            border-radius: 34px;
+            border: 1px solid rgba(253,199,135,.32);
+            background:
+                radial-gradient(circle at 78% 18%, rgba(253,199,135,.22), transparent 18rem),
+                radial-gradient(circle at 18% 0%, rgba(39,90,145,.42), transparent 28rem),
+                linear-gradient(135deg, rgba(2,19,52,.96), rgba(1,42,97,.72) 54%, rgba(2,8,23,.96));
+            box-shadow: 0 40px 120px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .detail-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(105deg, rgba(253,199,135,.12), transparent 34%),
+                repeating-linear-gradient(116deg, rgba(165,197,204,.045) 0 1px, transparent 1px 26px);
+        }
+        .detail-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr);
+            gap: clamp(20px, 3vw, 34px);
+            align-items: stretch;
+        }
+        .detail-cover {
+            position: relative;
+            overflow: hidden;
+            min-height: 310px;
+            border-radius: 26px;
+            background:
+                radial-gradient(circle at 80% 10%, rgba(253,199,135,.18), transparent 10rem),
+                linear-gradient(135deg, rgba(39,90,145,.38), rgba(2,19,52,.88));
+            border: 1px solid rgba(165,197,204,.18);
+            box-shadow: 0 28px 80px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .detail-cover img {
+            width: 100%;
+            height: 100%;
+            min-height: 310px;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.08) contrast(1.05);
+            transform: scale(1.01);
+        }
+        .detail-cover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(2,19,52,.72), transparent 58%);
+            pointer-events: none;
+        }
+        .detail-copy {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .back-link {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--text-soft) !important;
+            text-decoration: none !important;
+            font-size: .78rem;
+            font-weight: 900;
+            background: rgba(165,197,204,.075);
+            border: 1px solid rgba(165,197,204,.16);
+        }
+        .back-link:hover {
+            color: var(--gold) !important;
+            border-color: rgba(253,199,135,.34);
+            background: rgba(253,199,135,.10);
+        }
+        .detail-kicker {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            color: var(--gold) !important;
+            background: rgba(253,199,135,.10);
+            border: 1px solid rgba(253,199,135,.24);
+            font-size: .76rem;
+            font-weight: 950;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+        .detail-title {
+            margin: 13px 0 12px;
+            color: #fff !important;
+            font-size: clamp(2.25rem, 5.4vw, 5.6rem);
+            line-height: .90;
+            letter-spacing: -.075em;
+            text-shadow: 0 18px 58px rgba(0,0,0,.42);
+        }
+        .detail-description {
+            max-width: 900px;
+            color: rgba(238,248,250,.84) !important;
+            font-size: clamp(.98rem, 1.25vw, 1.18rem);
+            line-height: 1.78;
+            margin: 0 0 16px;
+        }
+        .detail-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 19px;
+        }
+        .detail-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 999px;
+            text-decoration: none !important;
+            font-weight: 950;
+            transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+        }
+        .detail-cta.primary {
+            color: var(--ink) !important;
+            background: linear-gradient(135deg, var(--gold), #ffe1aa 45%, var(--mist));
+            border: 1px solid rgba(253,199,135,.50);
+            box-shadow: 0 18px 52px rgba(253,199,135,.24), 0 0 34px rgba(253,199,135,.13);
+        }
+        .detail-cta.secondary {
+            color: var(--text) !important;
+            background: rgba(165,197,204,.08);
+            border: 1px solid rgba(165,197,204,.18);
+        }
+        .detail-cta:hover { transform: translateY(-3px); filter: brightness(1.05); }
+        .detail-panels {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 18px 0 24px;
+        }
+        .detail-panel {
+            min-height: 140px;
+            border-radius: 24px;
+            padding: 17px;
+            background: linear-gradient(180deg, rgba(1,42,97,.38), rgba(2,19,52,.76));
+            border: 1px solid rgba(165,197,204,.16);
+            box-shadow: 0 20px 60px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.06);
+        }
+        .detail-panel b {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff !important;
+            font-size: .98rem;
+        }
+        .detail-panel span, .detail-panel p {
+            color: var(--muted) !important;
+            font-size: .84rem;
+            line-height: 1.55;
+            margin: 0;
+        }
+        @media (max-width: 980px) {
+            .detail-grid { grid-template-columns: 1fr; }
+            .detail-cover, .detail-cover img { min-height: 230px; }
+            .detail-panels { grid-template-columns: 1fr; }
+        }
+
         </style>
         """
     )
@@ -2132,11 +2320,13 @@ def match_known_value(raw: str, options: Sequence[str]) -> str:
     return lookup.get(raw_clean.lower(), raw_clean)
 
 
-def app_link(view: str = "Explore", tag: str | None = None, anchor: str | None = None) -> str:
+def app_link(view: str = "Explore", tag: str | None = None, game: str | None = None, anchor: str | None = None) -> str:
     """Create an in-app same-tab navigation link using query params."""
     params = [f"view={quote(str(view), safe='')}"]
     if tag:
         params.append(f"tag={quote(str(tag), safe='')}")
+    if game:
+        params.append(f"game={quote(str(game), safe='')}")
     suffix = f"#{anchor}" if anchor else ""
     return "?" + "&".join(params) + suffix
 
@@ -2144,8 +2334,83 @@ def app_link(view: str = "Explore", tag: str | None = None, anchor: str | None =
 def tag_link(tag: str, active_tag: str = "") -> str:
     safe = esc(tag)
     active = " tag-active" if active_tag and active_tag.lower() == str(tag).lower() else ""
-    href = app_link("Explore", tag, "content-start")
+    href = app_link("Explore", tag=tag, anchor="content-start")
     return f'<a class="tag{active}" href="{href}" target="_top" title="Show more {safe} games in this page">{safe}</a>'
+
+
+def clean_game_text(value: object) -> str:
+    """Plain-text cleanup for Steam descriptions so raw HTML never appears in cards."""
+    if value is None:
+        return ""
+    try:
+        if isinstance(value, float) and pd.isna(value):
+            return ""
+    except Exception:
+        pass
+    text = html.unescape(str(value))
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    if text.lower() in {"nan", "none", "null"}:
+        return ""
+    return text
+
+
+def shorten_text(text: str, limit: int = 170) -> str:
+    text = clean_game_text(text)
+    if len(text) <= limit:
+        return text
+    return text[: max(0, limit - 1)].rsplit(" ", 1)[0].rstrip(".,;:") + "…"
+
+
+def gameplay_description(row: pd.Series, limit: int = 180) -> str:
+    """Use dataset short_description first, then generate a small gameplay-like summary."""
+    desc = clean_game_text(row.get("short_description", ""))
+    if desc:
+        return shorten_text(desc, limit)
+    title = clean_game_text(row.get("name", "this game")) or "This game"
+    genre = clean_game_text(row.get("genre_primary", "game")) or "game"
+    tags = row.get("tag_list", []) if isinstance(row.get("tag_list", []), list) else []
+    tag_part = ", ".join(str(t) for t in tags[:3])
+    if tag_part:
+        fallback = f"{title} is a {genre} title built around {tag_part} elements, surfaced here through quality, crowd, value, and content signals."
+    else:
+        fallback = f"{title} is a {genre} title surfaced through quality, crowd, value, and content signals."
+    return shorten_text(fallback, limit)
+
+
+def game_key(row: pd.Series) -> str:
+    try:
+        app_id = int(float(row.get("app_id", np.nan)))
+        if app_id > 0:
+            return str(app_id)
+    except Exception:
+        pass
+    try:
+        return f"idx-{int(row.name)}"
+    except Exception:
+        return quote(str(row.get("name", "game")), safe="")
+
+
+def detail_link(row: pd.Series, anchor: str | None = "content-start") -> str:
+    return app_link("Detail", game=game_key(row), anchor=anchor)
+
+
+def find_game_by_key(games: pd.DataFrame, key: str) -> pd.Series | None:
+    key_clean = str(key or "").strip()
+    if not key_clean:
+        return None
+    try:
+        normalized_number = str(int(float(key_clean)))
+    except Exception:
+        normalized_number = key_clean
+    for _, row in games.iterrows():
+        if game_key(row) == normalized_number or game_key(row) == key_clean:
+            return row
+    lower_key = key_clean.lower()
+    matched = games[games["name"].astype(str).str.lower() == lower_key]
+    if not matched.empty:
+        return matched.iloc[0]
+    return None
 
 
 def price_badge(row: pd.Series) -> str:
@@ -2224,22 +2489,12 @@ def game_card_html(
     active_tag: str = "",
 ) -> str:
     title = esc(row.get("name", "Unknown Game"))
-    url_raw = steam_url(row)
-    url = esc(url_raw)
-    title_html = (
-        f'<a href="{url}" target="_blank" rel="noopener noreferrer">{title}</a>'
-        if url
-        else title
-    )
+    detail_href = esc(detail_link(row))
     img = esc(str(row.get("header_image", "")).strip())
     initials = "".join([part[:1] for part in re.findall(r"[A-Za-z0-9]+", title)[:2]]).upper() or "SV"
     fallback = f'<div class="game-img-fallback"><div><span>{esc(initials)}</span><b>{title}</b></div></div>'
     media_inner = f'{fallback}<img src="{img}" alt="{title} cover" loading="lazy">' if img else fallback
-    img_html = (
-        f'<a class="cover-link" href="{url}" target="_blank" rel="noopener noreferrer" aria-label="Open {title} on Steam">{media_inner}<span class="preview-chip">▶ Steam preview</span></a>'
-        if url
-        else media_inner
-    )
+    img_html = f'<a class="cover-link" href="{detail_href}" target="_top" aria-label="Open detail page for {title}">{media_inner}<span class="preview-chip">View details</span></a>'
     genre = esc(row.get("genre_primary", "Unknown"))
     year = fmt_int(row.get("year"))
     score = fmt_float(row.get("final_score_pct", row.get("display_score", 0)), 1)
@@ -2249,6 +2504,8 @@ def game_card_html(
     tags = row.get("tag_list", []) if isinstance(row.get("tag_list", []), list) else []
     tag_html = "".join(tag_link(str(t), active_tag=active_tag) for t in tags[:7])
     why = esc(explain_row(row, games, favorite_titles, preferred_tags))
+    desc = esc(gameplay_description(row, limit=185))
+    desc_html = f'<p class="game-desc">{desc}</p>' if desc else ""
     comp_html = ""
     if show_components:
         comp_html = (
@@ -2258,14 +2515,10 @@ def game_card_html(
             + component_bar("Value", float(row.get("value_component", 0)))
         )
     rank_label = f"#{rank:02d}" if rank is not None else "Featured"
-    action_primary = (
-        f'<a class="card-action" href="{url}" target="_blank" rel="noopener noreferrer">Open Steam</a>'
-        if url
-        else '<span class="card-action">Details</span>'
-    )
     first_tag = str(tags[0]) if tags else ""
+    action_primary = f'<a class="card-action" href="{detail_href}" target="_top">View detail</a>'
     action_secondary = (
-        f'<a class="card-action secondary" href="{app_link("Explore", first_tag, "content-start")}" target="_top">More like this</a>'
+        f'<a class="card-action secondary" href="{app_link("Explore", tag=first_tag, anchor="content-start")}" target="_top">More like this</a>'
         if first_tag
         else '<span class="card-action secondary">More like this</span>'
     )
@@ -2279,13 +2532,14 @@ def game_card_html(
         </div>
       </div>
       <div class="game-body">
-        <div class="game-title">{title_html}</div>
+        <div class="game-title"><a href="{detail_href}" target="_top">{title}</a></div>
         <div class="meta-line">{genre} | {year} | {price_badge(row)}</div>
         <div class="pill-row">
           <span class="pill pill-green">Pos {pos}</span>
           <span class="pill">Reviews {recs}</span>
           <span class="pill">Playtime {play}</span>
         </div>
+        {desc_html}
         <div>{tag_html}</div>
         {comp_html}
         <div class="why"><span class="why-label">Why:</span> {why}</div>
@@ -2294,7 +2548,6 @@ def game_card_html(
     </article>
     """).strip()
     return re.sub(r">\s+<", "><", card_markup)
-
 
 def render_cards(
     rows: pd.DataFrame,
@@ -2324,6 +2577,110 @@ def render_cards(
         )
     render_html(f'<div class="card-grid" style="--cards-per-row:{columns};">{"".join(cards_html)}</div>')
 
+
+
+def similar_games_for(row: pd.Series, games: pd.DataFrame, matrix, limit: int = 6) -> pd.DataFrame:
+    """Find similar games for the detail page using content similarity plus quality signal."""
+    if games.empty:
+        return games.head(0)
+    try:
+        row_idx = int(row.name)
+        sims = cosine_similarity(matrix[row_idx], matrix).ravel()
+    except Exception:
+        sims = np.zeros(len(games), dtype=float)
+    out = games.copy()
+    if len(sims) == len(out):
+        out["detail_similarity"] = sims
+    else:
+        out["detail_similarity"] = 0.0
+    row_tags = {str(t).lower() for t in row.get("tag_list", [])} if isinstance(row.get("tag_list", []), list) else set()
+    row_genres = {str(g).lower() for g in row.get("genre_list", [])} if isinstance(row.get("genre_list", []), list) else set()
+    def overlap_bonus(other: pd.Series) -> float:
+        tags = {str(t).lower() for t in other.get("tag_list", [])} if isinstance(other.get("tag_list", []), list) else set()
+        genres = {str(g).lower() for g in other.get("genre_list", [])} if isinstance(other.get("genre_list", []), list) else set()
+        tag_score = len(tags & row_tags) / max(1, len(row_tags)) if row_tags else 0.0
+        genre_score = len(genres & row_genres) / max(1, len(row_genres)) if row_genres else 0.0
+        return 0.7 * tag_score + 0.3 * genre_score
+    out["detail_overlap"] = out.apply(overlap_bonus, axis=1)
+    out["detail_score"] = (
+        0.52 * out["detail_similarity"].fillna(0)
+        + 0.24 * out["detail_overlap"].fillna(0)
+        + 0.24 * out["quality_score"].fillna(0.5)
+    )
+    out = out.drop(index=row.name, errors="ignore")
+    out = out[out["name"].astype(str) != str(row.get("name", ""))]
+    return out.sort_values("detail_score", ascending=False).head(limit)
+
+
+def detail_panel_html(title: str, body: str) -> str:
+    return f'<div class="detail-panel"><b>{esc(title)}</b><p>{esc(body)}</p></div>'
+
+
+def render_game_detail(row: pd.Series, games: pd.DataFrame, matrix, active_tag: str = "") -> None:
+    title = esc(row.get("name", "Unknown Game"))
+    img = esc(str(row.get("header_image", "")).strip())
+    cover_html = f'<img src="{img}" alt="{title} cover" loading="lazy">' if img else f'<div class="game-img-fallback"><div><span>SV</span><b>{title}</b></div></div>'
+    desc = esc(gameplay_description(row, limit=650))
+    tags = row.get("tag_list", []) if isinstance(row.get("tag_list", []), list) else []
+    tag_html = "".join(tag_link(str(t), active_tag=active_tag) for t in tags[:12])
+    genre = esc(row.get("genre_primary", "Unknown"))
+    year = fmt_int(row.get("year"))
+    pos = fmt_float(row.get("positivity"), 1, "%")
+    recs = fmt_int(row.get("review_volume"))
+    play = fmt_float(row.get("playtime_h"), 1, "h")
+    score = fmt_float(row.get("display_score", 0), 1)
+    developer = clean_game_text(row.get("developer", "")) or "Unknown developer"
+    publisher = clean_game_text(row.get("publisher", "")) or "Unknown publisher"
+    steam = steam_url(row)
+    steam_button = f'<a class="detail-cta primary" href="{esc(steam)}" target="_blank" rel="noopener noreferrer">Open Steam page</a>' if steam else '<span class="detail-cta primary">Steam page unavailable</span>'
+    first_tag = str(tags[0]) if tags else ""
+    more_button = f'<a class="detail-cta secondary" href="{app_link("Explore", tag=first_tag, anchor="content-start")}" target="_top">Explore more {esc(first_tag)}</a>' if first_tag else f'<a class="detail-cta secondary" href="{app_link("Explore", anchor="content-start")}" target="_top">Back to library</a>'
+    back_href = app_link("Explore", tag=active_tag if active_tag else None, anchor="content-start")
+
+    mode_bits = []
+    if bool(row.get("is_singleplayer", False)):
+        mode_bits.append("Singleplayer")
+    if bool(row.get("is_multiplayer", False)):
+        mode_bits.append("Multiplayer")
+    if bool(row.get("is_coop", False)):
+        mode_bits.append("Co-op")
+    mode_text = ", ".join(mode_bits) if mode_bits else "Mode tidak tertulis eksplisit di metadata."
+    core_tags = ", ".join(str(t) for t in tags[:5]) if tags else "Tag belum tersedia."
+    why_text = explain_row(row, games, [], [])
+
+    render_html(f"""
+    <section class="detail-hero">
+      <a class="back-link" href="{back_href}" target="_top">← Back to library</a>
+      <div class="detail-grid">
+        <div class="detail-cover">{cover_html}</div>
+        <div class="detail-copy">
+          <span class="detail-kicker">{genre} / {year}</span>
+          <h1 class="detail-title">{title}</h1>
+          <p class="detail-description">{desc}</p>
+          <div class="pill-row">
+            <span class="pill pill-blue">Quality {score}</span>
+            <span class="pill pill-green">Pos {pos}</span>
+            <span class="pill">Reviews {recs}</span>
+            <span class="pill">Playtime {play}</span>
+            {price_badge(row)}
+          </div>
+          <div>{tag_html}</div>
+          <div class="detail-actions">{steam_button}{more_button}</div>
+        </div>
+      </div>
+    </section>
+    """)
+
+    panels = "".join([
+        detail_panel_html("Gameplay identity", f"{genre} game dengan fokus metadata: {core_tags}. Mode: {mode_text}"),
+        detail_panel_html("Studio signal", f"Developer: {developer}. Publisher: {publisher}."),
+        detail_panel_html("Why this game", why_text),
+    ])
+    render_html(f'<div class="detail-panels">{panels}</div>')
+
+    render_html(section_header("If you're interested in this", "similar games from tags, genre, description, and quality signal"))
+    similar = similar_games_for(row, games, matrix, limit=6)
+    render_cards(similar, games, columns=3, active_tag=active_tag)
 
 def apply_global_filters(
     games: pd.DataFrame,
@@ -2424,7 +2781,7 @@ def hero_section(total_games: int, filtered_games: int, data_source: str) -> str
           <div class="hero-proof-row">
             <span class="hero-proof">Hybrid recommender</span>
             <span class="hero-proof">Same-page tag filter</span>
-            <span class="hero-proof">Steam-ready cards</span>
+            <span class="hero-proof">Game detail pages</span>
             <span class="hero-proof">AAA-style UI</span>
           </div>
           <div class="hero-actions">
@@ -2468,7 +2825,7 @@ def hero_section(total_games: int, filtered_games: int, data_source: str) -> str
 
 def feature_strip() -> str:
     items = [
-        ("Discover", "Browse game cards with cinematic covers, badges, value signals, and Steam actions."),
+        ("Discover", "Browse game cards with cinematic covers, gameplay descriptions, badges, value signals, and detail pages."),
         ("Analyze", "Read market-level insight from genre, price, positivity, and quality distributions."),
         ("Recommend", "Run smart hybrid recommendation using content, rule, crowd, value, and novelty weights."),
         ("Explain", "Every recommendation includes a readable reason and component score breakdown."),
@@ -2495,7 +2852,10 @@ def top_navigation(active_view: str, active_tag: str = "") -> str:
         links.append(
             f'<a class="top-nav-link{active}" href="{app_link(view, tag=tag, anchor="content-start")}" target="_top">{esc(label)}</a>'
         )
-    tag_note = f'Tag aktif: {esc(active_tag)}' if active_tag else 'Same-tab navigation'
+    if active_view == "Detail":
+        tag_note = 'Game detail page'
+    else:
+        tag_note = f'Tag aktif: {esc(active_tag)}' if active_tag else 'Same-tab navigation'
     return (
         '<nav class="top-nav-shell" aria-label="Main navigation">'
         '<a class="top-nav-brand" href="' + app_link('Overview') + '" target="_top"><span>SV</span>SteamVault Pro</a>'
@@ -2542,7 +2902,7 @@ all_titles = sorted(games["name"].dropna().astype(str).unique().tolist())
 all_genres = sorted([g for g in games["genre_primary"].dropna().unique().tolist() if g and g != "Unknown"])
 all_tags = top_values_from_lists(games, "tag_list", limit=120)
 
-NAV_OPTIONS = ["Overview", "Explore", "Recommend", "Evaluation", "Methodology"]
+NAV_OPTIONS = ["Overview", "Explore", "Recommend", "Evaluation", "Methodology", "Detail"]
 active_view = match_known_value(query_value("view", "Overview"), NAV_OPTIONS)
 if active_view not in NAV_OPTIONS:
     active_view = "Overview"
@@ -2575,16 +2935,26 @@ global_search = st.sidebar.text_input("Cari judul")
 filtered = apply_global_filters(games, year_range, global_price, global_min_pos, global_genres, global_tags, global_mode, global_search)
 
 render_html(top_navigation(active_view, active_tag))
+nav_view = active_view
+
+if nav_view == "Detail":
+    render_html('<span id="content-start"></span>')
+    detail_row = find_game_by_key(games, query_value("game", ""))
+    if detail_row is None:
+        st.warning("Game detail tidak ditemukan. Kembali ke Library lalu pilih game lagi.")
+        st.stop()
+    render_game_detail(detail_row, games, tfidf_matrix, active_tag=active_tag)
+    st.stop()
+
 render_html(hero_section(len(games), len(filtered), data_source))
 render_html(
     """
     <div id="content-start" class="nav-intro">
       <span>Navigation ready</span>
-      <b>Menu atas, tag, dan More like this berpindah di tab yang sama. Poster/Open Steam tetap membuka Steam di tab baru.</b>
+      <b>Poster dan judul membuka halaman detail di tab yang sama. Tombol Steam tersedia di halaman detail.</b>
     </div>
     """
 )
-nav_view = active_view
 
 if active_tag:
     render_html(
@@ -2659,7 +3029,7 @@ if nav_view == "Overview":
 
 elif nav_view == "Explore":
     render_html('<span id="explore"></span>' + section_header("Game explorer", "browse, filter, and discover similar games"))
-    render_html("<div class='mini-note'>Klik tag di card untuk memfilter library di halaman yang sama. Klik poster atau Open Steam hanya jika ingin membuka halaman Steam game tersebut.</div>")
+    render_html("<div class='mini-note'>Klik poster atau judul game untuk masuk ke halaman detail di tab yang sama. Tombol Steam tersedia di halaman detail game.</div>")
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
