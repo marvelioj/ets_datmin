@@ -39,8 +39,12 @@ st.set_page_config(
 # -----------------------------------------------------------------------------
 # Styling
 # -----------------------------------------------------------------------------
-def render_html(markup: str) -> None:
-    """Render HTML/CSS with the safest Streamlit API available."""
+def render_html(markup: str, **_ignored_kwargs) -> None:
+    """Render HTML/CSS with the safest Streamlit API available.
+
+    The extra kwargs are intentionally accepted so old calls like
+    render_html(..., unsafe_allow_html=True) do not crash.
+    """
     try:
         st.html(markup)
     except Exception:
@@ -1404,8 +1408,7 @@ render_html(
         tetapi juga menjelaskan kenapa sebuah game direkomendasikan.
       </p>
     </div>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 st.caption(f"Data source: {data_source} | Jumlah data: {len(games):,} game | Setelah filter: {len(filtered):,} game")
@@ -1432,19 +1435,19 @@ with tab_overview:
             genre_count = filtered.groupby("genre_primary", as_index=False).size().sort_values("size", ascending=False).head(14)
             fig = px.bar(genre_count, x="size", y="genre_primary", orientation="h", title="Top genre berdasarkan jumlah game", labels={"size": "Jumlah", "genre_primary": "Genre"})
             fig.update_yaxes(categoryorder="total ascending")
-            st.plotly_chart(clean_plotly(fig, height=430), use_container_width=True)
+            st.plotly_chart(clean_plotly(fig, height=430), width="stretch")
         with c2:
             top_tags = safe_top_tags(filtered, 14)
             if not top_tags.empty:
                 fig = px.bar(top_tags, x="count", y="tag", orientation="h", title="Top tag paling sering muncul", labels={"count": "Jumlah", "tag": "Tag"})
                 fig.update_yaxes(categoryorder="total ascending")
-                st.plotly_chart(clean_plotly(fig, height=430), use_container_width=True)
+                st.plotly_chart(clean_plotly(fig, height=430), width="stretch")
 
         c3, c4 = st.columns(2)
         with c3:
             price_df = filtered[filtered["price_effective"].notna()].copy()
             fig = px.histogram(price_df, x="price_effective", nbins=30, title="Distribusi harga", labels={"price_effective": "Harga efektif ($)", "count": "Jumlah"})
-            st.plotly_chart(clean_plotly(fig, height=340), use_container_width=True)
+            st.plotly_chart(clean_plotly(fig, height=340), width="stretch")
         with c4:
             scatter = filtered.copy()
             scatter["review_volume_log"] = np.log10(scatter["review_volume"].fillna(0) + 1)
@@ -1458,7 +1461,7 @@ with tab_overview:
                 title="Positivity vs quality score",
                 labels={"positivity": "Positivity (%)", "display_score": "Quality score", "review_volume_log": "Log reviews", "genre_primary": "Genre"},
             )
-            st.plotly_chart(clean_plotly(fig, height=340), use_container_width=True)
+            st.plotly_chart(clean_plotly(fig, height=340), width="stretch")
 
         render_html("<div class='section-title'><h3>Top picks cepat</h3><span class='muted'>quality, value, dan popularity</span></div>")
         pick_cols = st.columns(3)
@@ -1505,7 +1508,7 @@ with tab_explore:
         ]
         st.dataframe(
             filtered[display_cols].rename(columns={"display_score": "quality_score", "price_effective": "price_usd"}),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
         st.download_button(
@@ -1597,7 +1600,7 @@ with tab_recommender:
         chart_long = chart_df.melt(id_vars="name", var_name="component", value_name="score")
         fig = px.bar(chart_long, x="score", y="name", color="component", orientation="h", barmode="group", title="Komponen skor top recommendation", labels={"score": "Skor 0-1", "name": "Game"})
         fig.update_yaxes(categoryorder="total ascending")
-        st.plotly_chart(clean_plotly(fig, height=470), use_container_width=True)
+        st.plotly_chart(clean_plotly(fig, height=470), width="stretch")
 
         export_cols = [
             "name",
@@ -1663,13 +1666,13 @@ with tab_evaluation:
         with e1:
             genre_eval = eval_recs.groupby("genre_primary", as_index=False).size().sort_values("size", ascending=False)
             fig = px.pie(genre_eval, values="size", names="genre_primary", title="Sebaran genre pada hasil rekomendasi")
-            st.plotly_chart(clean_plotly(fig, height=380), use_container_width=True)
+            st.plotly_chart(clean_plotly(fig, height=380), width="stretch")
         with e2:
             top_tag_eval = pd.DataFrame(tag_counter.most_common(12), columns=["tag", "count"])
             if not top_tag_eval.empty:
                 fig = px.bar(top_tag_eval, x="count", y="tag", orientation="h", title="Top tag pada hasil rekomendasi")
                 fig.update_yaxes(categoryorder="total ascending")
-                st.plotly_chart(clean_plotly(fig, height=380), use_container_width=True)
+                st.plotly_chart(clean_plotly(fig, height=380), width="stretch")
 
         st.markdown("### Interpretasi evaluasi")
         st.markdown(
