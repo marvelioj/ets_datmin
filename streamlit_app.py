@@ -42,9 +42,16 @@ st.set_page_config(
 # Styling
 # -----------------------------------------------------------------------------
 def render_html(markup: str, **_ignored_kwargs) -> None:
-    """Render custom HTML/CSS safely through Markdown without accidental code blocks."""
+    """Render custom HTML/CSS as HTML, not Markdown.
+
+    This prevents Markdown from turning nested card HTML into visible text/code blocks.
+    """
     cleaned = textwrap.dedent(str(markup)).strip()
-    if cleaned:
+    if not cleaned:
+        return
+    try:
+        st.html(cleaned)
+    except Exception:
         st.markdown(cleaned, unsafe_allow_html=True)
 
 
@@ -1246,6 +1253,143 @@ def inject_css() -> None:
             background: rgba(253,199,135,.08) !important;
         }
 
+        .top-nav-shell {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 0 0 18px;
+            padding: 10px;
+            border: 1px solid rgba(165,197,204,.16);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(2,19,52,.88), rgba(1,42,97,.50));
+            box-shadow: 0 20px 60px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.08);
+            backdrop-filter: blur(22px);
+        }
+        .top-nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 8px;
+            min-width: max-content;
+            color: var(--text) !important;
+            font-weight: 950;
+            letter-spacing: -.04em;
+        }
+        .top-nav-brand span {
+            width: 30px;
+            height: 30px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 11px;
+            color: var(--ink) !important;
+            background: linear-gradient(135deg, var(--gold), var(--mist));
+            box-shadow: 0 0 26px rgba(253,199,135,.22);
+            font-size: .78rem;
+        }
+        .top-nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .top-nav-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            padding: 0 13px;
+            border-radius: 999px;
+            border: 1px solid rgba(165,197,204,.13);
+            color: var(--text-soft) !important;
+            text-decoration: none !important;
+            background: rgba(165,197,204,.055);
+            font-size: .80rem;
+            font-weight: 900;
+            transition: transform .16s ease, border-color .16s ease, color .16s ease, background .16s ease, box-shadow .16s ease;
+        }
+        .top-nav-link:hover {
+            transform: translateY(-2px);
+            color: var(--gold) !important;
+            border-color: rgba(253,199,135,.34);
+            background: rgba(253,199,135,.10);
+            box-shadow: 0 14px 34px rgba(0,0,0,.22);
+        }
+        .top-nav-link.active {
+            color: var(--ink) !important;
+            border-color: rgba(253,199,135,.48);
+            background: linear-gradient(135deg, var(--gold), var(--mist));
+            box-shadow: 0 14px 36px rgba(253,199,135,.20);
+        }
+        .top-nav-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 6px;
+            padding: 0 12px;
+            min-height: 32px;
+            border-radius: 999px;
+            color: var(--muted) !important;
+            border: 1px solid rgba(165,197,204,.12);
+            background: rgba(2,19,52,.42);
+            font-size: .72rem;
+            font-weight: 800;
+        }
+        .hero-action-note {
+            max-width: 740px;
+            margin-top: 11px;
+            color: var(--muted) !important;
+            font-size: .82rem;
+            line-height: 1.55;
+        }
+        .hero-action-note b {
+            color: var(--gold) !important;
+            font-weight: 950;
+        }
+        @media (max-width: 760px) {
+            .top-nav-shell {
+                position: relative;
+                align-items: stretch;
+                flex-direction: column;
+                border-radius: 24px;
+                margin-top: 0;
+            }
+            .top-nav-brand { justify-content: center; padding-left: 0; }
+            .top-nav-links { justify-content: center; }
+            .top-nav-link { flex: 1 1 42%; }
+            .top-nav-meta { width: 100%; justify-content: center; margin-left: 0; }
+        }
+
+        .nav-intro {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 20px 0 10px;
+            padding: 12px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(165,197,204,.16);
+            background: linear-gradient(135deg, rgba(1,42,97,.34), rgba(2,19,52,.72));
+            box-shadow: 0 18px 52px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.06);
+        }
+        .nav-intro span {
+            color: var(--gold) !important;
+            font-size: .76rem;
+            font-weight: 950;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+        .nav-intro b {
+            color: var(--muted) !important;
+            font-size: .82rem;
+            font-weight: 800;
+            text-align: right;
+        }
+
         @media (max-width: 900px) {
             .hero-panel { transform: none; }
             .hero-grid { grid-template-columns: 1fr; }
@@ -1989,10 +2133,10 @@ def match_known_value(raw: str, options: Sequence[str]) -> str:
 
 
 def app_link(view: str = "Explore", tag: str | None = None, anchor: str | None = None) -> str:
-    """Create a lightweight in-app navigation link using query params."""
-    params = [f"view={quote(str(view))}"]
+    """Create an in-app same-tab navigation link using query params."""
+    params = [f"view={quote(str(view), safe='')}"]
     if tag:
-        params.append(f"tag={quote(str(tag))}")
+        params.append(f"tag={quote(str(tag), safe='')}")
     suffix = f"#{anchor}" if anchor else ""
     return "?" + "&".join(params) + suffix
 
@@ -2000,7 +2144,8 @@ def app_link(view: str = "Explore", tag: str | None = None, anchor: str | None =
 def tag_link(tag: str, active_tag: str = "") -> str:
     safe = esc(tag)
     active = " tag-active" if active_tag and active_tag.lower() == str(tag).lower() else ""
-    return f'<a class="tag{active}" href="{app_link("Explore", tag, "explore")}" title="Show more {safe} games">{safe}</a>'
+    href = app_link("Explore", tag, "content-start")
+    return f'<a class="tag{active}" href="{href}" target="_top" title="Show more {safe} games in this page">{safe}</a>'
 
 
 def price_badge(row: pd.Series) -> str:
@@ -2118,12 +2263,13 @@ def game_card_html(
         if url
         else '<span class="card-action">Details</span>'
     )
+    first_tag = str(tags[0]) if tags else ""
     action_secondary = (
-        f'<a class="card-action secondary" href="{url}" target="_blank" rel="noopener noreferrer">Wishlist</a>'
-        if url
-        else '<span class="card-action secondary">Wishlist</span>'
+        f'<a class="card-action secondary" href="{app_link("Explore", first_tag, "content-start")}" target="_top">More like this</a>'
+        if first_tag
+        else '<span class="card-action secondary">More like this</span>'
     )
-    return textwrap.dedent(f"""
+    card_markup = textwrap.dedent(f"""
     <article class="game-card">
       <div class="game-img-wrap">
         {img_html}
@@ -2147,6 +2293,7 @@ def game_card_html(
       </div>
     </article>
     """).strip()
+    return re.sub(r">\s+<", "><", card_markup)
 
 
 def render_cards(
@@ -2262,8 +2409,8 @@ def render_sidebar_brand() -> None:
 
 
 def hero_section(total_games: int, filtered_games: int, data_source: str) -> str:
-    explore_href = app_link("Explore", anchor="explore")
-    recommend_href = app_link("Recommend", anchor="recommender")
+    explore_href = app_link("Explore", anchor="content-start")
+    recommend_href = app_link("Recommend", anchor="content-start")
     return f"""
     <section class="hero">
       <div class="hero-grid">
@@ -2271,18 +2418,22 @@ def hero_section(total_games: int, filtered_games: int, data_source: str) -> str
           <div class="hero-kicker">SteamVault Pro / cinematic discovery engine</div>
           <h1><span class="ghost-word">Enter the</span> <span class="accent">Vault</span> of games.</h1>
           <p class="hero-subtitle">
-            A premium Steam discovery console that turns raw game data into cinematic browsing,
-            explainable recommendations, quality signals, value picks, and instantly clickable game journeys.
+            Platform eksplorasi game Steam dengan tampilan cinematic, filter library,
+            dan rekomendasi hybrid yang menjelaskan alasan tiap game dipilih.
           </p>
           <div class="hero-proof-row">
             <span class="hero-proof">Hybrid recommender</span>
-            <span class="hero-proof">Clickable tags</span>
+            <span class="hero-proof">Same-page tag filter</span>
             <span class="hero-proof">Steam-ready cards</span>
             <span class="hero-proof">AAA-style UI</span>
           </div>
           <div class="hero-actions">
-            <a class="cta cta-primary" href="{recommend_href}">Start recommendation</a>
-            <a class="cta cta-secondary" href="{explore_href}">Explore library</a>
+            <a class="cta cta-primary" href="{recommend_href}" target="_top">Cari rekomendasi</a>
+            <a class="cta cta-secondary" href="{explore_href}" target="_top">Browse library</a>
+          </div>
+          <div class="hero-action-note">
+            <b>Rekomendasi</b> = isi preferensi lalu sistem memilih game yang paling cocok.
+            <b>Library</b> = browse semua game, sorting, filter, dan klik tag tanpa buka tab baru.
           </div>
           <div class="hero-stats">
             <div class="hero-stat"><strong>{total_games:,}</strong><span>Total games indexed</span></div>
@@ -2328,6 +2479,29 @@ def feature_strip() -> str:
 
 def section_header(title: str, subtitle: str = "") -> str:
     return f'<div class="section-title"><h3>{esc(title)}</h3><span>{esc(subtitle)}</span></div>'
+
+def top_navigation(active_view: str, active_tag: str = "") -> str:
+    items = [
+        ("Overview", "Overview"),
+        ("Explore Library", "Explore"),
+        ("Recommender", "Recommend"),
+        ("Evaluation", "Evaluation"),
+        ("Methodology", "Methodology"),
+    ]
+    links: list[str] = []
+    for label, view in items:
+        active = " active" if active_view == view else ""
+        tag = active_tag if view == "Explore" and active_tag else None
+        links.append(
+            f'<a class="top-nav-link{active}" href="{app_link(view, tag=tag, anchor="content-start")}" target="_top">{esc(label)}</a>'
+        )
+    tag_note = f'Tag aktif: {esc(active_tag)}' if active_tag else 'Same-tab navigation'
+    return (
+        '<nav class="top-nav-shell" aria-label="Main navigation">'
+        '<a class="top-nav-brand" href="' + app_link('Overview') + '" target="_top"><span>SV</span>SteamVault Pro</a>'
+        f'<div class="top-nav-links">{"".join(links)}<div class="top-nav-meta">{tag_note}</div></div>'
+        '</nav>'
+    )
 
 # -----------------------------------------------------------------------------
 # Main app
@@ -2400,35 +2574,27 @@ global_mode = st.sidebar.selectbox("Mode global", ["any", "singleplayer", "multi
 global_search = st.sidebar.text_input("Cari judul")
 filtered = apply_global_filters(games, year_range, global_price, global_min_pos, global_genres, global_tags, global_mode, global_search)
 
+render_html(top_navigation(active_view, active_tag))
 render_html(hero_section(len(games), len(filtered), data_source))
-render_html(feature_strip())
+render_html(
+    """
+    <div id="content-start" class="nav-intro">
+      <span>Navigation ready</span>
+      <b>Menu atas, tag, dan More like this berpindah di tab yang sama. Poster/Open Steam tetap membuka Steam di tab baru.</b>
+    </div>
+    """
+)
+nav_view = active_view
 
 if active_tag:
     render_html(
         f"""
         <div class="active-filter-card">
           <span>Tag mode aktif: <b>{esc(active_tag)}</b>. Library sekarang menampilkan game dengan tag ini.</span>
-          <a href="{app_link('Explore', anchor='explore')}">Clear tag</a>
+          <a href="{app_link('Explore', anchor='content-start')}" target="_top">Clear tag</a>
         </div>
         """
     )
-
-spotlight_rows = filtered.sort_values("quality_score", ascending=False, na_position="last").head(6)
-spotlight_cards = "".join(
-    game_card_html(row, games, rank=i + 1, active_tag=active_tag)
-    for i, (_, row) in enumerate(spotlight_rows.iterrows())
-)
-render_html(
-    f"""
-    <section id="explore" class="spotlight-deck">
-      {section_header('Explore library', 'live cinematic game surface')}
-      <p class="muted" style="margin-top:-6px;margin-bottom:18px;max-width:860px;">
-        Klik poster atau tombol Open Steam untuk membuka halaman Steam. Klik tag pada card untuk langsung melihat kumpulan game dengan tag yang sama.
-      </p>
-      <div class="card-grid" style="--cards-per-row:3;">{spotlight_cards}</div>
-    </section>
-    """
-)
 
 st.caption(f"Data source: {data_source} | Jumlah data: {len(games):,} game | Setelah filter: {len(filtered):,} game")
 
@@ -2439,18 +2605,8 @@ kpi3.metric("Free titles", f"{int(filtered['is_free'].sum()):,}" if not filtered
 kpi4.metric("Avg positivity", fmt_float(filtered["positivity"].mean() if not filtered.empty else np.nan, 1, "%"))
 kpi5.metric("Quality index", fmt_float((filtered["quality_score"].mean() * 100) if not filtered.empty else np.nan, 1))
 
-
-render_html('<span id="recommender"></span>')
-nav_view = st.radio(
-    "Navigation",
-    NAV_OPTIONS,
-    index=NAV_OPTIONS.index(active_view),
-    horizontal=True,
-    label_visibility="collapsed",
-    key="main_navigation",
-)
-
 if nav_view == "Overview":
+    render_html(feature_strip())
     render_html(section_header("Library intelligence", "overview dataset"))
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
@@ -2502,7 +2658,8 @@ if nav_view == "Overview":
                 render_cards(data, games, columns=1, active_tag=active_tag)
 
 elif nav_view == "Explore":
-    render_html('<span id="explore"></span>' + section_header("Game explorer", "browse and shortlist candidates"))
+    render_html('<span id="explore"></span>' + section_header("Game explorer", "browse, filter, and discover similar games"))
+    render_html("<div class='mini-note'>Klik tag di card untuk memfilter library di halaman yang sama. Klik poster atau Open Steam hanya jika ingin membuka halaman Steam game tersebut.</div>")
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
