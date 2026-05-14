@@ -39,20 +39,30 @@ st.set_page_config(
 # -----------------------------------------------------------------------------
 # Styling
 # -----------------------------------------------------------------------------
+def render_html(markup: str) -> None:
+    """Render HTML/CSS with the safest Streamlit API available."""
+    try:
+        st.html(markup)
+    except Exception:
+        st.markdown(markup, unsafe_allow_html=True)
+
+
 def inject_css() -> None:
-    st.markdown(
+    render_html(
         """
         <style>
         :root {
-            --bg-0: #080b12;
-            --bg-1: #0d1320;
-            --bg-2: #121a2a;
-            --card: rgba(18, 26, 42, 0.92);
-            --card-2: rgba(22, 33, 54, 0.92);
-            --line: rgba(148, 163, 184, 0.18);
-            --line-2: rgba(56, 189, 248, 0.30);
-            --text: #e5eefb;
-            --muted: #94a3b8;
+            --bg-0: #05070d;
+            --bg-1: #08111f;
+            --bg-2: #0f172a;
+            --panel: rgba(15, 23, 42, 0.88);
+            --panel-2: rgba(17, 31, 54, 0.94);
+            --panel-3: rgba(30, 41, 59, 0.88);
+            --line: rgba(148, 163, 184, 0.20);
+            --line-2: rgba(56, 189, 248, 0.38);
+            --text: #edf5ff;
+            --text-2: #dbeafe;
+            --muted: #9fb0c8;
             --soft: #cbd5e1;
             --blue: #38bdf8;
             --cyan: #22d3ee;
@@ -61,113 +71,237 @@ def inject_css() -> None:
             --red: #fb7185;
             --purple: #a78bfa;
         }
+
+        html, body, .stApp {
+            background: #05070d !important;
+            color: var(--text) !important;
+        }
         .stApp {
             background:
-                radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 32rem),
-                radial-gradient(circle at top right, rgba(167, 139, 250, 0.12), transparent 30rem),
-                linear-gradient(135deg, var(--bg-0), var(--bg-1));
-            color: var(--text);
+                radial-gradient(circle at 10% -5%, rgba(56, 189, 248, 0.18), transparent 34rem),
+                radial-gradient(circle at 90% 0%, rgba(167, 139, 250, 0.16), transparent 32rem),
+                radial-gradient(circle at 50% 105%, rgba(52, 211, 153, 0.08), transparent 42rem),
+                linear-gradient(135deg, var(--bg-0), var(--bg-1) 52%, #050816) !important;
         }
-        .block-container { padding-top: 1.2rem; padding-bottom: 3rem; }
-        [data-testid="stSidebar"] {
-            background: rgba(8, 11, 18, 0.84);
-            border-right: 1px solid var(--line);
+        .block-container {
+            padding-top: 1.25rem;
+            padding-bottom: 3rem;
+            max-width: 1500px;
         }
-        h1, h2, h3 { letter-spacing: -0.03em; }
+
+        .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+        .stApp p, .stApp li, .stApp label, .stApp span,
+        .stApp [data-testid="stMarkdownContainer"] {
+            color: var(--text) !important;
+        }
+        .stApp a { color: #7dd3fc !important; }
+        .stApp small, .stApp .muted, .stApp [data-testid="stCaptionContainer"] p {
+            color: var(--muted) !important;
+        }
+        h1, h2, h3 { letter-spacing: -0.035em; }
+
+        section[data-testid="stSidebar"] {
+            background:
+                linear-gradient(180deg, rgba(5, 7, 13, 0.97), rgba(8, 17, 31, 0.95)),
+                radial-gradient(circle at top left, rgba(56,189,248,0.11), transparent 18rem) !important;
+            border-right: 1px solid rgba(148, 163, 184, 0.17);
+        }
+        section[data-testid="stSidebar"] > div {
+            background: transparent !important;
+        }
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+        section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
+            color: var(--text-2) !important;
+        }
+        section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {
+            color: var(--muted) !important;
+        }
+
+        /* Force widgets to stay readable in Streamlit light/dark/system themes. */
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="input"] > div,
+        div[data-baseweb="textarea"] > div {
+            background: rgba(15, 23, 42, 0.96) !important;
+            border: 1px solid rgba(148, 163, 184, 0.24) !important;
+            border-radius: 14px !important;
+            color: var(--text) !important;
+            box-shadow: none !important;
+        }
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        div[data-baseweb="select"] input {
+            color: var(--text) !important;
+            -webkit-text-fill-color: var(--text) !important;
+            caret-color: var(--blue) !important;
+        }
+        div[data-baseweb="select"] span,
+        div[data-baseweb="select"] svg,
+        div[data-baseweb="select"] div {
+            color: var(--text) !important;
+            fill: var(--text) !important;
+        }
+        div[data-baseweb="popover"],
+        div[data-baseweb="popover"] > div,
+        div[role="listbox"],
+        ul[role="listbox"] {
+            background: #0b1120 !important;
+            border: 1px solid rgba(148, 163, 184, 0.24) !important;
+            border-radius: 14px !important;
+            color: var(--text) !important;
+        }
+        div[role="option"], li[role="option"] {
+            background: #0b1120 !important;
+            color: var(--text) !important;
+        }
+        div[role="option"]:hover, li[role="option"]:hover {
+            background: rgba(56, 189, 248, 0.16) !important;
+        }
+        div[data-baseweb="tag"] {
+            background: rgba(56, 189, 248, 0.18) !important;
+            border: 1px solid rgba(56, 189, 248, 0.30) !important;
+            color: #dff6ff !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] {
+            background: rgba(15, 23, 42, 0.86) !important;
+            border: 1px dashed rgba(56, 189, 248, 0.38) !important;
+            border-radius: 18px !important;
+            color: var(--text) !important;
+        }
+        [data-testid="stFileUploaderDropzone"] * {
+            color: var(--text) !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button,
+        .stButton button,
+        .stDownloadButton button {
+            background: linear-gradient(135deg, rgba(56,189,248,0.20), rgba(167,139,250,0.18)) !important;
+            border: 1px solid rgba(125, 211, 252, 0.36) !important;
+            border-radius: 14px !important;
+            color: var(--text) !important;
+            font-weight: 800 !important;
+        }
+        [data-testid="stFileUploaderDropzone"] small {
+            color: var(--muted) !important;
+        }
+        [data-testid="stSlider"] [data-testid="stThumbValue"] {
+            color: #ffd1dc !important;
+            font-weight: 900 !important;
+        }
+        [data-testid="stSlider"] p {
+            color: var(--text-2) !important;
+            font-weight: 700 !important;
+        }
+
         div[data-testid="stMetric"] {
-            background: linear-gradient(180deg, rgba(18,26,42,0.95), rgba(13,19,32,0.95));
-            border: 1px solid var(--line);
-            border-radius: 1.2rem;
+            background: linear-gradient(180deg, rgba(17, 31, 54, 0.92), rgba(8, 17, 31, 0.94));
+            border: 1px solid rgba(148,163,184,0.18);
+            border-radius: 1.25rem;
             padding: 1rem 1rem;
-            box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+            box-shadow: 0 18px 54px rgba(0,0,0,0.28);
         }
         div[data-testid="stMetric"] label { color: var(--muted) !important; }
-        div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: var(--text); }
+        div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: var(--text) !important; }
+
         .hero {
             position: relative;
             overflow: hidden;
             border: 1px solid var(--line-2);
-            border-radius: 28px;
-            padding: 30px;
+            border-radius: 30px;
+            padding: 34px;
             margin: 0 0 18px 0;
             background:
-                linear-gradient(135deg, rgba(56,189,248,0.16), rgba(167,139,250,0.10)),
-                linear-gradient(180deg, rgba(18,26,42,0.88), rgba(13,19,32,0.92));
-            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
+                linear-gradient(135deg, rgba(56,189,248,0.17), rgba(167,139,250,0.12)),
+                linear-gradient(180deg, rgba(17,31,54,0.88), rgba(8,17,31,0.94));
+            box-shadow: 0 30px 95px rgba(0, 0, 0, 0.35);
         }
         .hero:after {
             content: "";
             position: absolute;
             right: -120px;
-            top: -110px;
-            width: 300px;
-            height: 300px;
+            top: -120px;
+            width: 315px;
+            height: 315px;
             border-radius: 50%;
-            background: rgba(56,189,248,0.12);
-            filter: blur(2px);
+            background: rgba(56,189,248,0.13);
+            filter: blur(1px);
         }
         .hero-kicker {
             display: inline-flex;
             gap: 8px;
             align-items: center;
-            padding: 6px 11px;
+            padding: 7px 12px;
             border-radius: 999px;
-            background: rgba(56,189,248,0.12);
-            border: 1px solid rgba(56,189,248,0.24);
-            color: #bae6fd;
+            background: rgba(56,189,248,0.14);
+            border: 1px solid rgba(56,189,248,0.28);
+            color: #bae6fd !important;
             font-size: 0.82rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-weight: 900;
+            margin-bottom: 12px;
         }
         .hero h1 {
             margin: 0;
-            font-size: clamp(2.2rem, 5vw, 4.5rem);
-            line-height: 0.96;
+            font-size: clamp(2.3rem, 5vw, 4.7rem);
+            line-height: 0.94;
+            color: #ffffff !important;
+            text-shadow: 0 18px 50px rgba(0,0,0,0.34);
         }
         .hero p {
-            max-width: 820px;
-            color: var(--soft);
-            font-size: 1.05rem;
-            margin-top: 14px;
+            max-width: 880px;
+            color: var(--soft) !important;
+            font-size: 1.06rem;
+            margin-top: 16px;
             margin-bottom: 0;
         }
         .glass-panel {
-            background: var(--card);
-            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(17,31,54,0.93), rgba(15,23,42,0.90));
+            border: 1px solid rgba(148,163,184,0.18);
             border-radius: 22px;
             padding: 18px;
             box-shadow: 0 18px 54px rgba(0,0,0,0.25);
             margin-bottom: 16px;
+            color: var(--text) !important;
         }
         .section-title {
             display: flex;
             align-items: end;
             justify-content: space-between;
             gap: 12px;
-            margin: 10px 0 12px 0;
+            margin: 14px 0 12px 0;
         }
-        .section-title h3 { margin: 0; }
-        .muted { color: var(--muted); }
+        .section-title h3 { margin: 0; color: #f8fbff !important; }
+        .muted { color: var(--muted) !important; }
+
         .game-card {
             height: 100%;
-            background: linear-gradient(180deg, rgba(22,33,54,0.96), rgba(13,19,32,0.96));
-            border: 1px solid var(--line);
-            border-radius: 22px;
+            min-height: 100%;
+            background: linear-gradient(180deg, rgba(17,31,54,0.98), rgba(10,18,32,0.98));
+            border: 1px solid rgba(148,163,184,0.19);
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 18px 50px rgba(0,0,0,0.24);
-            transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+            transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+            margin-bottom: 18px;
         }
         .game-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(56,189,248,0.45);
-            box-shadow: 0 24px 70px rgba(0,0,0,0.34);
+            transform: translateY(-4px);
+            border-color: rgba(56,189,248,0.55);
+            box-shadow: 0 26px 82px rgba(0,0,0,0.39);
         }
         .game-img-wrap {
             width: 100%;
             aspect-ratio: 2.16 / 1;
             background: linear-gradient(135deg, rgba(56,189,248,0.16), rgba(167,139,250,0.11));
             overflow: hidden;
-            border-bottom: 1px solid var(--line);
+            border-bottom: 1px solid rgba(148,163,184,0.16);
         }
         .game-img-wrap img {
             width: 100%;
@@ -175,63 +309,73 @@ def inject_css() -> None:
             object-fit: cover;
             display: block;
         }
-        .game-body { padding: 14px 15px 16px 15px; }
+        .game-body { padding: 15px 16px 17px 16px; }
         .game-title {
-            font-size: 1.02rem;
-            font-weight: 800;
-            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #f8fbff !important;
             line-height: 1.25;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
         }
-        .game-title a { color: inherit; text-decoration: none; }
+        .game-title a { color: #f8fbff !important; text-decoration: none; }
+        .game-title a:hover { color: #7dd3fc !important; }
         .meta-line {
-            color: var(--muted);
-            font-size: 0.82rem;
-            margin-bottom: 9px;
+            color: var(--muted) !important;
+            font-size: 0.83rem;
+            margin-bottom: 10px;
         }
-        .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+        .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 9px 0; }
         .pill {
             display: inline-flex;
             align-items: center;
             gap: 5px;
             border-radius: 999px;
-            padding: 5px 9px;
+            padding: 6px 10px;
             font-size: 0.72rem;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: 0.01em;
-            border: 1px solid var(--line);
-            color: #dbeafe;
+            border: 1px solid rgba(148,163,184,0.18);
+            color: #eaf2ff !important;
             background: rgba(148,163,184,0.12);
+            white-space: nowrap;
         }
-        .pill-blue { background: rgba(56,189,248,0.14); color: #bae6fd; border-color: rgba(56,189,248,0.28); }
-        .pill-green { background: rgba(52,211,153,0.14); color: #bbf7d0; border-color: rgba(52,211,153,0.28); }
-        .pill-amber { background: rgba(251,191,36,0.14); color: #fde68a; border-color: rgba(251,191,36,0.28); }
-        .pill-red { background: rgba(251,113,133,0.14); color: #fecdd3; border-color: rgba(251,113,133,0.28); }
+        .pill-blue { background: rgba(56,189,248,0.16); color: #bae6fd !important; border-color: rgba(56,189,248,0.34); }
+        .pill-green { background: rgba(52,211,153,0.16); color: #bbf7d0 !important; border-color: rgba(52,211,153,0.34); }
+        .pill-amber { background: rgba(251,191,36,0.16); color: #fde68a !important; border-color: rgba(251,191,36,0.34); }
+        .pill-red { background: rgba(251,113,133,0.18); color: #fecdd3 !important; border-color: rgba(251,113,133,0.36); }
         .tag {
             display: inline-flex;
-            padding: 4px 8px;
+            padding: 5px 9px;
             border-radius: 999px;
             background: rgba(148,163,184,0.11);
-            border: 1px solid rgba(148,163,184,0.18);
-            color: #cbd5e1;
+            border: 1px solid rgba(148,163,184,0.20);
+            color: #dbeafe !important;
             font-size: 0.72rem;
-            margin: 0 4px 5px 0;
+            margin: 0 5px 6px 0;
         }
         .why {
-            border-top: 1px solid var(--line);
-            margin-top: 10px;
-            padding-top: 10px;
-            color: var(--soft);
-            font-size: 0.80rem;
+            border: 1px solid rgba(56,189,248,0.18);
+            background: linear-gradient(180deg, rgba(56,189,248,0.09), rgba(15,23,42,0.24));
+            margin-top: 12px;
+            padding: 11px 12px;
+            border-radius: 15px;
+            color: var(--soft) !important;
+            font-size: 0.82rem;
+            line-height: 1.45;
         }
-        .bar-row { margin: 7px 0; }
+        .why b, .why-label {
+            color: #bae6fd !important;
+            font-weight: 900;
+        }
+        .bar-row { margin: 8px 0; }
         .bar-label {
             display: flex;
             justify-content: space-between;
-            color: var(--muted);
+            color: var(--muted) !important;
             font-size: 0.72rem;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
+        .bar-label span { color: var(--muted) !important; }
         .bar-track {
             height: 7px;
             border-radius: 999px;
@@ -245,35 +389,49 @@ def inject_css() -> None:
         }
         .mini-note {
             border-left: 3px solid var(--blue);
-            background: rgba(56,189,248,0.08);
-            border-radius: 14px;
+            background: rgba(56,189,248,0.09);
+            border-radius: 15px;
             padding: 12px 14px;
-            color: var(--soft);
+            color: var(--soft) !important;
             margin: 8px 0 16px 0;
         }
         .method-card {
-            background: rgba(18,26,42,0.92);
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            padding: 16px;
+            background: linear-gradient(180deg, rgba(17,31,54,0.93), rgba(15,23,42,0.91));
+            border: 1px solid rgba(148,163,184,0.18);
+            border-radius: 19px;
+            padding: 17px;
             height: 100%;
+            box-shadow: 0 16px 44px rgba(0,0,0,0.24);
         }
-        .method-card h4 { margin-top: 0; }
+        .method-card h4 { margin-top: 0; color: #f8fbff !important; }
+        .method-card p { color: var(--soft) !important; }
+
         .stTabs [data-baseweb="tab-list"] { gap: 8px; }
         .stTabs [data-baseweb="tab"] {
             background: rgba(148,163,184,0.08);
             border: 1px solid rgba(148,163,184,0.14);
             border-radius: 999px;
             padding: 9px 15px;
+            color: var(--text-2) !important;
         }
+        .stTabs [data-baseweb="tab"] p { color: var(--text-2) !important; }
         .stTabs [aria-selected="true"] {
-            background: rgba(56,189,248,0.14) !important;
-            border-color: rgba(56,189,248,0.34) !important;
-            color: #bae6fd !important;
+            background: rgba(56,189,248,0.16) !important;
+            border-color: rgba(56,189,248,0.38) !important;
+        }
+        .stTabs [aria-selected="true"] p { color: #bae6fd !important; font-weight: 900 !important; }
+
+        [data-testid="stExpander"] {
+            background: rgba(15,23,42,0.86) !important;
+            border: 1px solid rgba(148,163,184,0.18) !important;
+            border-radius: 18px !important;
+        }
+        .stAlert {
+            background: rgba(15,23,42,0.90) !important;
+            color: var(--text) !important;
         }
         </style>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
@@ -1049,10 +1207,14 @@ def game_card_html(
     show_components: bool = False,
 ) -> str:
     title = esc(row.get("name", "Unknown Game"))
-    url = steam_url(row)
-    title_html = f"<a href='{url}' target='_blank'>{title}</a>" if url else title
-    img = esc(row.get("header_image", ""))
-    img_html = f"<img src='{img}' onerror=\"this.style.display='none'\"/>" if img else ""
+    url = esc(steam_url(row))
+    title_html = (
+        f'<a href="{url}" target="_blank" rel="noopener noreferrer">{title}</a>'
+        if url
+        else title
+    )
+    img = esc(str(row.get("header_image", "")).strip())
+    img_html = f'<img src="{img}" alt="{title} cover" loading="lazy">' if img else ""
     genre = esc(row.get("genre_primary", "Unknown"))
     year = fmt_int(row.get("year"))
     score = fmt_float(row.get("final_score_pct", row.get("display_score", 0)), 1)
@@ -1060,7 +1222,7 @@ def game_card_html(
     recs = fmt_int(row.get("review_volume"))
     play = fmt_float(row.get("playtime_h"), 1, "h")
     tags = row.get("tag_list", []) if isinstance(row.get("tag_list", []), list) else []
-    tag_html = "".join(f"<span class='tag'>{esc(t)}</span>" for t in tags[:7])
+    tag_html = "".join(f'<span class="tag">{esc(t)}</span>' for t in tags[:7])
     why = esc(explain_row(row, games, favorite_titles, preferred_tags))
     comp_html = ""
     if show_components:
@@ -1071,24 +1233,23 @@ def game_card_html(
             + component_bar("Value", float(row.get("value_component", 0)))
         )
     return f"""
-    <div class='game-card'>
-      <div class='game-img-wrap'>{img_html}</div>
-      <div class='game-body'>
-        <div class='game-title'>{title_html}</div>
-        <div class='meta-line'>{genre} | {year} | {price_badge(row)}</div>
-        <div class='pill-row'>
-          <span class='pill pill-blue'>Score {score}</span>
-          <span class='pill pill-green'>Pos {pos}</span>
-          <span class='pill'>Reviews {recs}</span>
-          <span class='pill'>Playtime {play}</span>
+    <article class="game-card">
+      <div class="game-img-wrap">{img_html}</div>
+      <div class="game-body">
+        <div class="game-title">{title_html}</div>
+        <div class="meta-line">{genre} | {year} | {price_badge(row)}</div>
+        <div class="pill-row">
+          <span class="pill pill-blue">Score {score}</span>
+          <span class="pill pill-green">Pos {pos}</span>
+          <span class="pill">Reviews {recs}</span>
+          <span class="pill">Playtime {play}</span>
         </div>
         <div>{tag_html}</div>
         {comp_html}
-        <div class='why'><b>Why:</b> {why}</div>
+        <div class="why"><span class="why-label">Why:</span> {why}</div>
       </div>
-    </div>
+    </article>
     """
-
 
 def render_cards(
     rows: pd.DataFrame,
@@ -1104,10 +1265,7 @@ def render_cards(
     cards = st.columns(columns)
     for i, (_, row) in enumerate(rows.iterrows()):
         with cards[i % columns]:
-            st.markdown(
-                game_card_html(row, games, favorite_titles, preferred_tags, show_components),
-                unsafe_allow_html=True,
-            )
+            render_html(game_card_html(row, games, favorite_titles, preferred_tags, show_components))
 
 
 def apply_global_filters(
@@ -1160,6 +1318,20 @@ def safe_top_tags(df: pd.DataFrame, n: int = 20) -> pd.DataFrame:
         if isinstance(values, list):
             counter.update(values)
     return pd.DataFrame(counter.most_common(n), columns=["tag", "count"])
+
+
+
+def top_unique_games(df: pd.DataFrame, sort_col: str, used_names: set[str], n: int = 3) -> pd.DataFrame:
+    """Pick top games while avoiding repeated titles across quick-pick panels."""
+    if df.empty or sort_col not in df.columns:
+        return df.head(0)
+    ranked = df.sort_values(sort_col, ascending=False, na_position="last")
+    fresh = ranked[~ranked["name"].astype(str).isin(used_names)].head(n)
+    if len(fresh) < n:
+        fallback = ranked[~ranked.index.isin(fresh.index)].head(n - len(fresh))
+        fresh = pd.concat([fresh, fallback], axis=0)
+    used_names.update(fresh["name"].astype(str).tolist())
+    return fresh
 
 
 # -----------------------------------------------------------------------------
@@ -1221,7 +1393,7 @@ global_mode = st.sidebar.selectbox("Mode global", ["any", "singleplayer", "multi
 global_search = st.sidebar.text_input("Cari judul")
 filtered = apply_global_filters(games, year_range, global_price, global_min_pos, global_genres, global_tags, global_mode, global_search)
 
-st.markdown(
+render_html(
     f"""
     <div class='hero'>
       <div class='hero-kicker'>Recommendation System Dashboard</div>
@@ -1251,7 +1423,7 @@ tab_overview, tab_explore, tab_recommender, tab_evaluation, tab_method = st.tabs
 )
 
 with tab_overview:
-    st.markdown("<div class='section-title'><h3>Insight utama</h3><span class='muted'>overview dataset</span></div>", unsafe_allow_html=True)
+    render_html("<div class='section-title'><h3>Insight utama</h3><span class='muted'>overview dataset</span></div>")
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
@@ -1288,20 +1460,21 @@ with tab_overview:
             )
             st.plotly_chart(clean_plotly(fig, height=340), use_container_width=True)
 
-        st.markdown("<div class='section-title'><h3>Top picks cepat</h3><span class='muted'>quality, value, dan popularity</span></div>", unsafe_allow_html=True)
+        render_html("<div class='section-title'><h3>Top picks cepat</h3><span class='muted'>quality, value, dan popularity</span></div>")
         pick_cols = st.columns(3)
+        used_quick_names: set[str] = set()
         quick_sets = [
-            ("Best Quality", filtered.sort_values("quality_score", ascending=False).head(3)),
-            ("Best Value", filtered.sort_values("value_score", ascending=False).head(3)),
-            ("Crowd Favorite", filtered.sort_values("crowd_score", ascending=False).head(3)),
+            ("Best Quality", top_unique_games(filtered, "quality_score", used_quick_names, 3)),
+            ("Best Value", top_unique_games(filtered, "value_score", used_quick_names, 3)),
+            ("Crowd Favorite", top_unique_games(filtered, "crowd_score", used_quick_names, 3)),
         ]
         for col, (label, data) in zip(pick_cols, quick_sets):
             with col:
-                st.markdown(f"<div class='glass-panel'><b>{esc(label)}</b></div>", unsafe_allow_html=True)
+                render_html(f"<div class='glass-panel'><b>{esc(label)}</b></div>")
                 render_cards(data, games, columns=1)
 
 with tab_explore:
-    st.markdown("<div class='section-title'><h3>Game explorer</h3><span class='muted'>browse dan shortlist kandidat</span></div>", unsafe_allow_html=True)
+    render_html("<div class='section-title'><h3>Game explorer</h3><span class='muted'>browse dan shortlist kandidat</span></div>")
     if filtered.empty:
         st.warning("Tidak ada data pada filter global saat ini.")
     else:
@@ -1343,7 +1516,7 @@ with tab_explore:
         )
 
 with tab_recommender:
-    st.markdown("<div class='section-title'><h3>Smart recommender</h3><span class='muted'>hybrid, explainable, configurable</span></div>", unsafe_allow_html=True)
+    render_html("<div class='section-title'><h3>Smart recommender</h3><span class='muted'>hybrid, explainable, configurable</span></div>")
     st.markdown(
         "<div class='mini-note'>Tips: pilih 1-5 game favorit atau beberapa tag/genre. Jika tidak ada input favorit, sistem otomatis menjadi cold-start recommender berbasis rule, value, dan crowd signal.</div>",
         unsafe_allow_html=True,
@@ -1451,7 +1624,7 @@ with tab_recommender:
         )
 
 with tab_evaluation:
-    st.markdown("<div class='section-title'><h3>Evaluasi rekomendasi</h3><span class='muted'>quality, diversity, coverage</span></div>", unsafe_allow_html=True)
+    render_html("<div class='section-title'><h3>Evaluasi rekomendasi</h3><span class='muted'>quality, diversity, coverage</span></div>")
     st.write("Tab ini mengevaluasi hasil rekomendasi terakhir dari konfigurasi pada tab Rekomendasi.")
     try:
         eval_recs = recs.copy()
@@ -1509,7 +1682,7 @@ with tab_evaluation:
         )
 
 with tab_method:
-    st.markdown("<div class='section-title'><h3>Metodologi sistem rekomendasi</h3><span class='muted'>siap dipakai untuk pembahasan dashboard</span></div>", unsafe_allow_html=True)
+    render_html("<div class='section-title'><h3>Metodologi sistem rekomendasi</h3><span class='muted'>siap dipakai untuk pembahasan dashboard</span></div>")
     st.markdown(
         """
         Dashboard ini memakai empat pendekatan utama agar sesuai dengan topik recommendation system.
