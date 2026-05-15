@@ -2789,7 +2789,7 @@ def hero_section(total_games: int, filtered_games: int, data_source: str) -> str
             <a class="cta cta-secondary" href="{explore_href}" target="_top">Browse library</a>
           </div>
           <div class="hero-action-note">
-            <b>Rekomendasi</b> = isi preferensi lalu sistem memilih game yang paling cocok.
+            <b>Rekomendasi</b> = isi preferensi lalu sistem memilih game yang paling cocok. \n
             <b>Library</b> = browse semua game, sorting, filter, dan klik tag tanpa buka tab baru.
           </div>
           <div class="hero-stats">
