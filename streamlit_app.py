@@ -832,7 +832,7 @@ def inject_css() -> None:
             position: relative;
             z-index: 3;
         }
-        .card-action {
+        .stApp a.card-action, .card-action {
             flex: 1;
             display: inline-flex;
             align-items: center;
@@ -1067,7 +1067,7 @@ def inject_css() -> None:
             letter-spacing: -.01em;
             box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
         }
-        .cta-primary {
+        .stApp a.cta-primary, .cta-primary {
             box-shadow: 0 24px 64px rgba(253,199,135,.28), 0 0 34px rgba(253,199,135,.18);
         }
         .cta-secondary {
@@ -2680,7 +2680,7 @@ def render_game_detail(row: pd.Series, games: pd.DataFrame, matrix, active_tag: 
           <p class="detail-description">{desc}</p>
           <div class="pill-row">
             <span class="pill pill-blue">Quality {score}</span>
-            <span class="pill pill-green">Pos {pos}</span>
+            <span class="pill pill-green">Positivity {pos}</span>
             <span class="pill">Reviews {recs}</span>
             <span class="pill">Playtime {play}</span>
             {price_badge(row)}
