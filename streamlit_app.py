@@ -547,6 +547,7 @@ def inject_css() -> None:
             color: #fff !important;
             font-size: 1.2rem;
             line-height: 1;
+            white-space: nowrap;
         }
         .hero-stat span {
             display: block;
