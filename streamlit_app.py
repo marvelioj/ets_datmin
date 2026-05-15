@@ -3015,7 +3015,7 @@ kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
 kpi1.metric("Library size", f"{len(games):,}")
 kpi2.metric("Active results", f"{len(filtered):,}")
 kpi3.metric("Free titles", f"{int(filtered['is_free'].sum()):,}" if not filtered.empty else "0")
-kpi4.metric("Avg positivity", fmt_float(filtered["positivity"].mean() if not filtered.empty else np.nan, 1, "%"))
+kpi4.metric("Average positivity", fmt_float(filtered["positivity"].mean() if not filtered.empty else np.nan, 1, "%"))
 kpi5.metric("Quality index", fmt_float((filtered["quality_score"].mean() * 100) if not filtered.empty else np.nan, 1))
 
 if nav_view == "Overview":
