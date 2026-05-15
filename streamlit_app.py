@@ -2547,8 +2547,10 @@ def game_card_html(
         {desc_html}
         <div>{tag_html}</div>
         {comp_html}
-        <div class="why"><span class="why-label">Why:</span> {why}</div>
-        <div class="card-actions">{action_primary}{action_secondary}</div>
+        <div class="card-footer">
+          <div class="why"><span class="why-label">Why:</span> {why}</div>
+          <div class="card-actions">{action_primary}{action_secondary}</div>
+        </div>
       </div>
     </article>
     """).strip()
