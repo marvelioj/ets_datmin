@@ -2557,9 +2557,9 @@ def game_card_html(
           <span class="pill">Playtime {play}</span>
         </div>
         {desc_html}
-        <div>{tag_html}</div>
-        {comp_html}
         <div class="card-footer">
+          <div class="tags-wrap">{tag_html}</div>
+          {comp_html}
           <div class="why"><span class="why-label">Why:</span> {why}</div>
           <div class="card-actions">{action_primary}{action_secondary}</div>
         </div>
