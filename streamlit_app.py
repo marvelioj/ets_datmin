@@ -811,10 +811,16 @@ def inject_css() -> None:
             color: var(--gold) !important;
             font-weight: 950;
         }
+        .card-footer {
+            margin-top: auto;
+            padding-top: 18px;
+            display: flex;
+            flex-direction: column;
+        }
         .card-actions {
             display: flex;
             gap: 9px;
-            margin-top: 16px;
+            margin-top: 13px;
             position: relative;
             z-index: 3;
         }
