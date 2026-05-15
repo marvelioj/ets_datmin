@@ -532,7 +532,7 @@ def inject_css() -> None:
         }
         .hero-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr max-content;
+            grid-template-columns: auto auto auto;
             gap: 12px;
             margin-top: 16px;
         }
@@ -541,6 +541,7 @@ def inject_css() -> None:
             padding: 13px;
             background: rgba(165,197,204,.06);
             border: 1px solid rgba(165,197,204,.13);
+            white-space: nowrap;
         }
         .hero-stat strong {
             display: block;
