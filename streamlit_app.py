@@ -301,12 +301,10 @@ def inject_css() -> None:
             transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
         }
         [data-testid="stFileUploaderDropzone"] button,
-        [data-testid="stFileUploaderDropzone"] button *,
-        .stButton button,
-        .stButton button *,
-        .stDownloadButton button,
-        .stDownloadButton button * {
+        [data-testid="stFileUploaderDropzone"] button span,
+        [data-testid="stFileUploaderDropzone"] button p {
             color: var(--ink) !important;
+            -webkit-text-fill-color: var(--ink) !important;
         }
         [data-testid="stFileUploaderDropzone"] button:hover,
         .stButton button:hover,
