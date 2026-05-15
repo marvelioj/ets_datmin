@@ -300,6 +300,14 @@ def inject_css() -> None:
             box-shadow: 0 14px 34px rgba(253,199,135,.18) !important;
             transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
         }
+        [data-testid="stFileUploaderDropzone"] button,
+        [data-testid="stFileUploaderDropzone"] button *,
+        .stButton button,
+        .stButton button *,
+        .stDownloadButton button,
+        .stDownloadButton button * {
+            color: var(--ink) !important;
+        }
         [data-testid="stFileUploaderDropzone"] button:hover,
         .stButton button:hover,
         .stDownloadButton button:hover {
