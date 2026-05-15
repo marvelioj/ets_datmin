@@ -752,7 +752,7 @@ def inject_css() -> None:
         }
         .score-badge { color: var(--mist) !important; border-color: rgba(165,197,204,.30); }
         .game-body {
-            padding: 17px 17px 18px;
+            padding: 14px 14px 16px;
             display: flex;
             flex-direction: column;
             flex: 1 1 auto;
@@ -817,10 +817,11 @@ def inject_css() -> None:
             font-weight: 950;
         }
         .card-footer {
-            margin-top: auto;
-            padding-top: 18px;
+            margin-top: 16px;
+            padding-top: 14px;
             display: flex;
             flex-direction: column;
+            border-top: 1px solid rgba(165,197,204,.10);
         }
         .card-actions {
             display: flex;
@@ -1429,7 +1430,7 @@ def inject_css() -> None:
 
         /* Detail page + gameplay description patch */
         .game-desc {
-            margin: 11px 0 18px;
+            margin: 11px 0 auto;
             color: rgba(238,248,250,.78) !important;
             font-size: .82rem;
             line-height: 1.55;
