@@ -815,7 +815,6 @@ def inject_css() -> None:
             display: flex;
             gap: 9px;
             margin-top: 16px;
-            padding-top: 18px;
             position: relative;
             z-index: 3;
         }
