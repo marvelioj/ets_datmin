@@ -531,13 +531,12 @@ def inject_css() -> None:
             border: 1px solid rgba(253,199,135,.25);
         }
         .hero-stats {
-            display: flex;
-            flex-wrap: wrap
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
             margin-top: 16px;
         }
         .hero-stat {
-            flex: 0 1 auto;
             border-radius: 18px;
             padding: 13px;
             background: rgba(165,197,204,.06);
@@ -548,7 +547,6 @@ def inject_css() -> None:
             color: #fff !important;
             font-size: 1.2rem;
             line-height: 1;
-            white-space: nowrap;
         }
         .hero-stat span {
             display: block;
