@@ -817,11 +817,14 @@ def inject_css() -> None:
             font-weight: 950;
         }
         .card-footer {
-            margin-top: 16px;
-            padding-top: 14px;
+            margin-top: auto;
+            padding-top: 18px;
             display: flex;
             flex-direction: column;
             border-top: 1px solid rgba(165,197,204,.10);
+        }
+        .tags-wrap {
+            margin-bottom: 14px;
         }
         .card-actions {
             display: flex;
@@ -1430,7 +1433,7 @@ def inject_css() -> None:
 
         /* Detail page + gameplay description patch */
         .game-desc {
-            margin: 11px 0 auto;
+            margin: 11px 0 0;
             color: rgba(238,248,250,.78) !important;
             font-size: .82rem;
             line-height: 1.55;
