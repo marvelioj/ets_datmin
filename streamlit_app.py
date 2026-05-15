@@ -800,7 +800,7 @@ def inject_css() -> None:
             position: relative;
             border: 1px solid rgba(253,199,135,.16);
             background: linear-gradient(180deg, rgba(253,199,135,.08), rgba(39,90,145,.10));
-            margin-top: 12px;
+            margin-top: auto;
             padding: 12px 13px;
             border-radius: 18px;
             color: var(--text-soft) !important;
@@ -814,7 +814,7 @@ def inject_css() -> None:
         .card-actions {
             display: flex;
             gap: 9px;
-            margin-top: auto;
+            margin-top: 16px;
             padding-top: 18px;
             position: relative;
             z-index: 3;
