@@ -2535,7 +2535,7 @@ def game_card_html(
     initials = "".join([part[:1] for part in re.findall(r"[A-Za-z0-9]+", title)[:2]]).upper() or "SV"
     fallback = f'<div class="game-img-fallback"><div><span>{esc(initials)}</span><b>{title}</b></div></div>'
     media_inner = f'{fallback}<img src="{img}" alt="{title} cover" loading="lazy">' if img else fallback
-    img_html = f'<a class="cover-link" href="{detail_href}" target="_top" aria-label="Open detail page for {title}">{media_inner}<span class="preview-chip">View details</span></a>'
+    img_html = f'<a class="cover-link" href="{detail_href}" target="_top" aria-label="Open detail page for {title}">{media_inner}</a>'
     genre = esc(row.get("genre_primary", "Unknown"))
     year = fmt_int(row.get("year"))
     score = fmt_float(row.get("final_score_pct", row.get("display_score", 0)), 1)
@@ -2557,7 +2557,7 @@ def game_card_html(
         )
     rank_label = f"#{rank:02d}" if rank is not None else "Featured"
     first_tag = str(tags[0]) if tags else ""
-    action_primary = f'<a class="card-action" href="{detail_href}" target="_top">View detail</a>'
+    action_primary = f'<a class="card-action" href="{detail_href}" target="_top">View details</a>'
     action_secondary = (
         f'<a class="card-action secondary" href="{app_link("Explore", tag=first_tag, anchor="content-start")}" target="_top">More like this</a>'
         if first_tag
