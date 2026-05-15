@@ -751,12 +751,7 @@ def inject_css() -> None:
             backdrop-filter: blur(12px);
         }
         .score-badge { color: var(--mist) !important; border-color: rgba(165,197,204,.30); }
-        .game-body { 
-            padding: 17px 17px 18px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
+        .game-body { padding: 17px 17px 18px; }
         .game-title {
             font-size: 1.13rem;
             font-weight: 950;
