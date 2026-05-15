@@ -749,7 +749,12 @@ def inject_css() -> None:
             backdrop-filter: blur(12px);
         }
         .score-badge { color: var(--mist) !important; border-color: rgba(165,197,204,.30); }
-        .game-body { padding: 17px 17px 18px; }
+        .game-body { 
+            padding: 17px 17px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
         .game-title {
             font-size: 1.13rem;
             font-weight: 950;
@@ -812,7 +817,10 @@ def inject_css() -> None:
         .card-actions {
             display: flex;
             gap: 9px;
-            margin-top: 13px;
+            margin-top: auto;
+            padding-top: 18px;
+            position: relative;
+            z-index: 3;
         }
         .card-action {
             flex: 1;
@@ -2790,7 +2798,7 @@ def hero_section(total_games: int, filtered_games: int, data_source: str) -> str
             <a class="cta cta-secondary" href="{explore_href}" target="_top">Browse library</a>
           </div>
           <div class="hero-action-note">
-            <b>Rekomendasi</b> = isi preferensi lalu sistem memilih game yang paling cocok. \n
+            <b>Rekomendasi</b> = isi preferensi lalu sistem memilih game yang paling cocok.<br>
             <b>Library</b> = browse semua game, sorting, filter, dan klik tag tanpa buka tab baru.
           </div>
           <div class="hero-stats">
