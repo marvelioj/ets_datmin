@@ -820,8 +820,7 @@ def inject_css() -> None:
             margin-top: auto;
             padding-top: 18px;
             display: flex;
-            flex-direction: column;
-            border-top: 1px solid rgba(165,197,204,.10);
+            flex-direction: column;a
         }
         .tags-wrap {
             margin-bottom: 14px;
