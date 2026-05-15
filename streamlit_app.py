@@ -1616,7 +1616,23 @@ def inject_css() -> None:
             .detail-cover, .detail-cover img { min-height: 230px; }
             .detail-panels { grid-template-columns: 1fr; }
         }
-
+        .stApp a.card-action, 
+        .stApp a.cta-primary,
+        .stApp a.detail-cta.primary {
+            color: var(--ink) !important;
+        }
+        .stApp a.card-action.secondary,
+        .stApp a.cta-secondary,
+        .stApp a.detail-cta.secondary {
+            color: var(--text) !important;
+            background: rgba(165,197,204,.08) !important;
+            border-color: rgba(165,197,204,.16) !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button *,
+        .stButton button *,
+        .stDownloadButton button * {
+            color: var(--ink) !important;
+        }
         </style>
         """
     )
