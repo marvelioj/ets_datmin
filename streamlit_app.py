@@ -2554,7 +2554,7 @@ def game_card_html(
         <div class="game-title"><a href="{detail_href}" target="_top">{title}</a></div>
         <div class="meta-line">{genre} | {year} | {price_badge(row)}</div>
         <div class="pill-row">
-          <span class="pill pill-green">Pos {pos}</span>
+          <span class="pill pill-green">Positivity {pos}</span>
           <span class="pill">Reviews {recs}</span>
           <span class="pill">Playtime {play}</span>
         </div>
