@@ -659,6 +659,8 @@ def inject_css() -> None:
             transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
             margin-bottom: 20px;
             isolation: isolate;
+            display: flex;
+            flex-direction: column;
         }
         .game-card::before {
             content: "";
