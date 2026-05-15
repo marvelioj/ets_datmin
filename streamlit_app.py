@@ -1419,7 +1419,7 @@ def inject_css() -> None:
 
         /* Detail page + gameplay description patch */
         .game-desc {
-            margin: 11px 0 0;
+            margin: 11px 0 18px;
             color: rgba(238,248,250,.78) !important;
             font-size: .82rem;
             line-height: 1.55;
