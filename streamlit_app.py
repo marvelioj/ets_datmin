@@ -532,7 +532,7 @@ def inject_css() -> None:
         }
         .hero-stats {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: 1fr 1fr max-content;
             gap: 12px;
             margin-top: 16px;
         }
